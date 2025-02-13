@@ -1,0 +1,6 @@
+.env
+.vscode
+
+volumes
+secrets
+node_modules

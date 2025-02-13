@@ -1,0 +1,44 @@
+services:
+  db:
+    env_file: ".env"
+    build: 
+      context: .
+      dockerfile: dbdockerfile
+    image: postgres
+    environment:
+      PGUSER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASSWORD
+    ports:
+    - "5432:5432"
+    volumes:
+      - ./volumes/pgdata/:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  server: 
+    build: .
+    command: npm start
+    env_file: ".env"
+    develop:
+      watch:
+      - action: sync+restart
+        path: ./src
+        target: /app/src
+        ignore:
+          - node_modules/
+      - action: rebuild
+        path: ./package.json
+    restart: on-failure
+    ports:
+      - "443:443"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080

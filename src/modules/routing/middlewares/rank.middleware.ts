@@ -1,0 +1,30 @@
+import { NextFunction, Request, Response } from "express";
+import { WebSocket } from "ws";
+
+import { Server } from "modules/server/Server";
+import { HTTPRouteHandler, WSRouteHandler } from "modules/routing/RoutingManager";
+
+export enum Rank {
+    STUDENT = 0,
+    ADMIN = 1
+}
+
+export function RankMiddleware(type: "HTTP", rank: Rank): HTTPRouteHandler
+export function RankMiddleware(type: "WS", rank: Rank): WSRouteHandler
+export function RankMiddleware(type: "HTTP" | "WS", rank: Rank) {
+    switch(type) {
+        case "HTTP":
+            return ((server: Server, req: Request, res: Response, next: NextFunction) => {
+                if (!req.session.rank) return res.status(401).send()
+                if (req.session.rank < rank) return res.status(403).send()
+                next()
+            }) as HTTPRouteHandler
+
+        case "WS":
+            return ((server: Server, ws: WebSocket, req: Request, next: NextFunction) => {
+                if (!req.session.rank) return ws.close()
+                if (req.session.rank < rank) return ws.close()
+                next()
+            }) as WSRouteHandler
+    }
+}
