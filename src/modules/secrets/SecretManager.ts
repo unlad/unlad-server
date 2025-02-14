@@ -20,14 +20,17 @@ export class SecretManager {
             cert.serialNumber = '01' + randomBytes(19).toString("hex");
             cert.validity.notBefore = new Date();
             cert.validity.notAfter = new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 365);
-            const attrs = [{ name: 'countryName', value: '' }, { shortName: 'ST', value: '.'}, { name: 'organizationName', value: '.'}];
+            const attrs = [{ name: "commonName", value: "localhost" }];
 
             cert.setSubject(attrs);
             cert.setIssuer(attrs);
 
             cert.setExtensions([{
                 name: 'subjectAltName',
-                altNames: [{ type: 6, value: "http://localhost/" }, { type: 7, value: "127.0.0.1" }]
+                altNames: [
+                    ...process.env.WEB_IPS!.split(";").map(ip => ip.trim()).map(ip => { return { type: 6, value: ip } }),
+                    ...process.env.WEB_URIS!.split(";").map(uri => uri.trim()).map(uri => { return { type: 7, value: uri } })
+                ]
             }]);
 
             cert.sign(keys.privateKey);
