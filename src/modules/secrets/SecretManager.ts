@@ -11,7 +11,9 @@ export class SecretManager {
 
     session: Buffer
 
-    constructor() {
+    generate() {
+        if (process.env.ENV == "PROD") return
+
         if (!existsSync("secrets/ssl/server.key") || existsSync("secrets/ssl/server.crt")) {
             const keys = forge.pki.rsa.generateKeyPair(2048);
             const cert = forge.pki.createCertificate();
@@ -51,6 +53,10 @@ export class SecretManager {
             mkdirSync("secrets/session", { recursive: true })
             writeFileSync("secrets/session/secret", secret)
         }
+    }
+
+    constructor() {
+        this.generate()
 
         this.ssl = {
             key: readFileSync("secrets/ssl/server.key"),
