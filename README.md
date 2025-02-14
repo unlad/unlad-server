@@ -1,14 +1,13 @@
-# Requirements
-Add the following files:
-```fs
-/secrets/session/secret
-/secrets/ssl/server.crt
-/secrets/ssl/server.key
-.env
-```
+# Secrets
 
-- `/secrets/ssl/server.*` files must be a valid certificate/key
-- [see here for .env contents](#environment)
+## SSL
+- `/secrets/ssl/server.key` - X.509 certificate private key
+- `/secrets/ssl/server.crt` - X.509 security certificate
+
+## Session
+- `/secrets/session/secret` - Cookie signature cipher secret
+
+
 
 # Environment
 ```ini
