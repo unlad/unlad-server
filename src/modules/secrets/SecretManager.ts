@@ -28,9 +28,12 @@ export class SecretManager {
             cert.setExtensions([{
                 name: 'subjectAltName',
                 altNames: [
-                    ...process.env.WEB_IPS!.split(";").map(ip => ip.trim()).map(ip => { return { type: 6, value: ip } }),
-                    ...process.env.WEB_URIS!.split(";").map(uri => uri.trim()).map(uri => { return { type: 7, value: uri } })
+                    ...process.env.WEB_URIS!.split(";").map(uri => uri.trim()).map(uri => { return { type: 6, value: uri } }),
+                    ...process.env.WEB_IPS!.split(";").map(ip => ip.trim()).map(ip => { return { type: 7, ip } })
                 ]
+            }, {
+                name: "basicConstraints",
+                cA: true
             }]);
 
             cert.sign(keys.privateKey);
