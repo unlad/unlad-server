@@ -29,6 +29,9 @@ services:
         target: /app/src
         ignore:
           - node_modules/
+      - action: sync+restart
+        path: ./.env
+        target: /app/.env
       - action: rebuild
         path: ./package.json
     restart: on-failure
