@@ -1,6 +1,6 @@
 .env
 .vscode
 
-volumes
-secrets
-node_modules
+/volumes
+/secrets
+/node_modules
