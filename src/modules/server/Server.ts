@@ -6,9 +6,10 @@ import { BankManager } from "modules/bank/BankManager";
 import { ItemManager } from "modules/items/ItemManager";
 import { MenuManager } from "modules/menu/MenuManager";
 import { OrderManager } from "modules/orders/OrderManager";
+import { UserManager } from "modules/users/UserManager";
 import { CookieMiddleware } from "modules/routing/middlewares/cookies.middleware";
 
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 import extend, { Application } from "express-ws"
 import cors from "cors";
 import http from "http";
@@ -26,6 +27,7 @@ export class Server {
     items: ItemManager
     menu: MenuManager
     orders: OrderManager
+    users: UserManager
 
     async start() {
         await this.database.connect()        
@@ -64,5 +66,6 @@ export class Server {
         this.items = new ItemManager(this)
         this.menu = new MenuManager(this)
         this.orders = new OrderManager(this)
+        this.users = new UserManager(this)
     }
 }
