@@ -25,6 +25,10 @@ export class ItemManager {
         return { code: 0 }
     }
 
+    list() {
+        return { code: 0, items: Array.from(this.items.values()) } as const
+    }
+
     resolve(uuid: string) {
         const item = this.items.get(uuid)
         if (!item) return { code: 1 } as const

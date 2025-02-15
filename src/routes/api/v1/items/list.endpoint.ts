@@ -9,7 +9,7 @@ export default new Route({
             method: "GET",
             handlers: [
                 async (server: Server, req: Request, res: Response, next: NextFunction) => {
-                    const query = await server.database.items.list()
+                    const query = await server.items.list()
                     if (query.code) return res.send({ code: 1 })
 
                     res.send({ code: 0, items: query.items })
