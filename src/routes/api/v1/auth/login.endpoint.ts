@@ -26,11 +26,11 @@ export default new Route({
                     const authquery = await server.auth.authenticate(data.username, data.hash)
                     if (authquery.code) return res.send({ code: 3 })
                     
-                    const userquery = await server.database.users.resolve(authquery.uuid)
+                    const userquery = await server.users.resolve(authquery.uuid)
                     if (userquery.code) return res.send({ code: 4 })
 
-                    req.session.uuid = authquery.uuid
-                    req.session.rank = userquery.data.rank as Rank
+                    req.session.uuid = userquery.uuid
+                    req.session.rank = userquery.rank as Rank
 
                     const signature = sign(req.session.id, server.secrets.session.toString())
                     const cookie = serialize("connect.sid", signature).split("=").join("=s%3A")
