@@ -5,14 +5,6 @@ import { hash, argon2id, verify } from 'argon2'
 import session from "express-session"
 import store from "connect-pg-simple"
 
-export interface AccessToken {
-    uuid: string
-}
-
-export interface RefreshToken {
-    token: string
-}
-
 export class AuthManager {
     database: DatabaseManager
 
