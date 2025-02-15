@@ -48,6 +48,36 @@ export class ItemManager {
         return { code: 0 }
     }
 
+    async rename(uuid: string, name: string) {
+        const query = await this.server.database.items.rename(uuid, name)
+        if (query.code) return { code: 1 }
+
+        const reload = await this.loadItems()
+        if (reload.code) return { code: 2 }
+
+        return { code: 0 }
+    }
+
+    async redescribe(uuid: string, description: string) {
+        const query = await this.server.database.items.redescribe(uuid, description)
+        if (query.code) return { code: 1 }
+
+        const reload = await this.loadItems()
+        if (reload.code) return { code: 2 }
+
+        return { code: 0 }
+    }
+
+    async reprice(uuid: string, price: number) {
+        const query = await this.server.database.items.reprice(uuid, price)
+        if (query.code) return { code: 1 }
+
+        const reload = await this.loadItems()
+        if (reload.code) return { code: 2 }
+
+        return { code: 0 }
+    }
+
     async delete(uuid: string) {
         const query = await this.server.database.items.delete(uuid)
         if (query.code) return { code: 1 }
