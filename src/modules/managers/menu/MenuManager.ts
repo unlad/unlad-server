@@ -1,5 +1,5 @@
 import { Server } from "modules/server/Server";
-import { Item } from "modules/items/ItemManager"
+import { Item } from "modules/managers/items/ItemManager"
 
 export class MenuManager {
     server: Server

@@ -1,12 +1,12 @@
 import { RoutingManager} from "modules/routing/RoutingManager";
 import { DatabaseManager } from "modules/database/DatabaseManager";
 import { SecretManager } from "modules/secrets/SecretManager";
-import { AuthManager } from "modules/auth/AuthManager";
-import { BankManager } from "modules/bank/BankManager";
-import { ItemManager } from "modules/items/ItemManager";
-import { MenuManager } from "modules/menu/MenuManager";
-import { OrderManager } from "modules/orders/OrderManager";
-import { UserManager } from "modules/users/UserManager";
+import { AuthManager } from "modules/managers/auth/AuthManager";
+import { BankManager } from "modules/managers/bank/BankManager";
+import { ItemManager } from "modules/managers/items/ItemManager";
+import { MenuManager } from "modules/managers/menu/MenuManager";
+import { OrderManager } from "modules/managers/orders/OrderManager";
+import { UserManager } from "modules/managers/users/UserManager";
 import { CookieMiddleware } from "modules/routing/middlewares/cookies.middleware";
 
 import express from "express";

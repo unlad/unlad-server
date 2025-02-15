@@ -1,6 +1,6 @@
 import { Route, HTTPEndpoint } from "modules/routing/RoutingManager";
 import { Server } from "modules/server/Server"
-import { Rank } from "modules/users/UserManager";
+import { Rank } from "modules/managers/users/UserManager";
 import { AuthenticationMiddleware } from "modules/routing/middlewares/auth.middleware";
 import { RankMiddleware } from "modules/routing/middlewares/rank.middleware";
 

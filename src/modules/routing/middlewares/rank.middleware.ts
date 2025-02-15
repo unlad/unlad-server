@@ -3,7 +3,7 @@ import { WebSocket } from "ws";
 
 import { Server } from "modules/server/Server";
 import { HTTPRouteHandler, WSRouteHandler } from "modules/routing/RoutingManager";
-import { Rank } from "modules/users/UserManager";
+import { Rank } from "modules/managers/users/UserManager";
 
 export function RankMiddleware(type: "HTTP", rank: Rank): HTTPRouteHandler
 export function RankMiddleware(type: "WS", rank: Rank): WSRouteHandler

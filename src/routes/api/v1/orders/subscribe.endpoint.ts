@@ -1,7 +1,7 @@
 import { Route, WSEndpoint } from "modules/routing/RoutingManager";
 import { Server } from "modules/server/Server"
 import { AuthenticationMiddleware } from "modules/routing/middlewares/auth.middleware";
-import { OrderStatus } from "modules/orders/OrderManager";
+import { OrderStatus } from "modules/managers/orders/OrderManager";
 
 import { NextFunction, Request } from "express"
 import { z } from "zod"

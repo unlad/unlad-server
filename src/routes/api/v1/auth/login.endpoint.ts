@@ -1,6 +1,6 @@
 import { Route, HTTPEndpoint } from "modules/routing/RoutingManager";
 import { Server } from "modules/server/Server"
-import { Rank } from "modules/users/UserManager";
+import { Rank } from "modules/managers/users/UserManager";
 
 import { NextFunction, Request, Response } from "express"
 import { z } from "zod";
