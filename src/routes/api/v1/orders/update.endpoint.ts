@@ -30,7 +30,7 @@ export default new Route({
 
                     switch(data.status) {
                         case -1: order.cancel(); break
-                        case 1: console.log(await order.confirm()); break
+                        case 1: order.confirm(); break
                         case 2: order.complete(); break
                         case 3: order.receive(); break
 
