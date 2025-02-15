@@ -16,13 +16,13 @@ export class ItemManager {
 
     async loadItems() {
         const query = await this.server.database.items.list()
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
         for (const item of query.items) {
             this.items.set(item.uuid, item as Item)
         }
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     list() {
@@ -40,52 +40,52 @@ export class ItemManager {
         const uuid = v4()
 
         const query = await this.server.database.items.create(uuid, name, description, price)
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
         const reload = await this.loadItems()
-        if (reload.code) return { code: 2 }
+        if (reload.code) return { code: 2 } as const
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     async rename(uuid: string, name: string) {
         const query = await this.server.database.items.rename(uuid, name)
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
         const reload = await this.loadItems()
-        if (reload.code) return { code: 2 }
+        if (reload.code) return { code: 2 } as const
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     async redescribe(uuid: string, description: string) {
         const query = await this.server.database.items.redescribe(uuid, description)
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
         const reload = await this.loadItems()
-        if (reload.code) return { code: 2 }
+        if (reload.code) return { code: 2 } as const
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     async reprice(uuid: string, price: number) {
         const query = await this.server.database.items.reprice(uuid, price)
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
         const reload = await this.loadItems()
-        if (reload.code) return { code: 2 }
+        if (reload.code) return { code: 2 } as const
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     async delete(uuid: string) {
         const query = await this.server.database.items.delete(uuid)
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
         const reload = await this.loadItems()
-        if (reload.code) return { code: 2 }
+        if (reload.code) return { code: 2 } as const
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     constructor(server: Server) {

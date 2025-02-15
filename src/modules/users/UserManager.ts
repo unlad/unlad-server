@@ -10,7 +10,7 @@ export class UserManager {
 
     async resolve(uuid: string) {
         const query = await this.server.database.users.resolve(uuid)
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
         return { 
             code: 0,
@@ -20,42 +20,42 @@ export class UserManager {
             handle: query.data.handle,
             rank: query.data.rank,
             created: query.data.created
-        }
+        } as const
     }
 
     async create(uuid: string, id: string, username: string, hash: string) {
         const query = await this.server.database.users.create(uuid, id, username, hash)
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     async delete(uuid: string) {
         const query = await this.server.database.users.delete(uuid)
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     async hash(uuid: string) {
         const query = await this.server.database.users.hash(uuid)
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
-        return { code: 0, hash: query.data.hash }
+        return { code: 0, hash: query.data.hash } as const
     }
 
     async uuid(username: string) {
         const query = await this.server.database.users.uuid(username)
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
-        return { code: 0, uuid: query.data.uuid }
+        return { code: 0, uuid: query.data.uuid } as const
     }
 
     async rank(uuid: string, rank: Rank) {
         const query = await this.server.database.users.rank(uuid, rank)
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     constructor(server: Server) {

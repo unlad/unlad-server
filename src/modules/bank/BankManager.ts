@@ -14,30 +14,30 @@ export class BankManager {
 
     async resolve(uuid: string) {
         const query = await this.server.database.bank.resolve(uuid);
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
-        return { code: 0, balance: query.data.balance }
+        return { code: 0, balance: query.data.balance } as const
     }
 
     async credit(uuid: string, amount: number) {
         const query = await this.server.database.bank.credit(uuid, amount)
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
     
     async deduct(uuid: string, amount: number) {
         const query = await this.server.database.bank.deduct(uuid, amount)
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     async transfer(sender: string, receiver: string, amount: number) {
         const query = await this.server.database.bank.transfer(sender, receiver, amount)
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     constructor(server: Server) {

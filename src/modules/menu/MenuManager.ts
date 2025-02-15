@@ -8,28 +8,31 @@ export class MenuManager {
 
     add(uuid: string) {
         const query = this.server.items.resolve(uuid)
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
         this.items.set(uuid, query.item)
+
+        return { code: 0 } as const
     }
 
     remove(uuid: string) {
         const result = this.items.delete(uuid)
-        if (!result) return { code: 0 }
-        else return { code: 1 }
+        if (!result) return { code: 0 } as const
+        
+        return { code: 1 } as const
     }
 
     clear() {
         this.items.clear()
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     resolve() {
         return {
             code: 0,
             menu: Array.from(this.items.values())
-        }
+        } as const
     }
 
     constructor(server: Server) {

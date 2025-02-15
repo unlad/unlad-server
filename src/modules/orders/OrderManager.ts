@@ -36,12 +36,12 @@ export class Order extends EventEmitter {
 
     price() {
         const price = Array.from(this.items.values()).map(item => item.price).reduce((a,b) => a + b)
-        return { code: 0, price }
+        return { code: 0, price } as const
     }
 
     async pay() {
         const formatted = this.format()
-        if (formatted.code) return { code: 1 }
+        if (formatted.code) return { code: 1 } as const
 
         /*
         The code below may be dangerous, may need to replace in prod.
@@ -52,87 +52,87 @@ export class Order extends EventEmitter {
 
         // DANGEROUS //
         const deductquery = await this.server.database.bank.deduct(this.uuid, this.price().price)
-        if (deductquery.code) return { code: 2 }
+        if (deductquery.code) return { code: 2 } as const
 
         const transactquery = await this.server.database.transactions.add(this.uuid, formatted.items, "Automated Payment")
-        if (transactquery.code) return { code: 3 }
+        if (transactquery.code) return { code: 3 } as const
         // DANGEROUS //
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     add(uuid: string, amount: number) {
         const query = this.server.items.resolve(uuid)
-        if (query.code) return { code: 1 }
+        if (query.code) return { code: 1 } as const
 
         const item = query.item as OrderItem
         item.amount = amount
 
         this.items.set(item.uuid, item)
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     set(uuid: string, amount: number) {
         const item = this.items.get(uuid)
-        if (!item) return { code: 1 }
+        if (!item) return { code: 1 } as const
 
         item.amount = amount
         
         this.items.set(uuid, item)
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     remove(uuid: string) {
         const item = this.items.get(uuid)
-        if (!item) return { code: 1 }
+        if (!item) return { code: 1 } as const
         this.items.delete(uuid)
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     clear() {
         this.items.clear()
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     async confirm() {
-        if (this.status !== OrderStatus.PENDING) return { code: 1 }
+        if (this.status !== OrderStatus.PENDING) return { code: 1 } as const
 
         const query = await this.pay();
-        if (query.code) return { code: 2 }
+        if (query.code) return { code: 2 } as const
 
         this.status = OrderStatus.CONFIRMED
         this.emit("status", this.status)
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     cancel() {
-        if (this.status !== OrderStatus.PENDING) return { code: 1 }
+        if (this.status !== OrderStatus.PENDING) return { code: 1 } as const
 
         this.status = OrderStatus.CANCELLED
         this.emit("status", this.status)
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     complete() {
-        if (this.status !== OrderStatus.CONFIRMED) return { code: 1 }
+        if (this.status !== OrderStatus.CONFIRMED) return { code: 1 } as const
         
         this.status = OrderStatus.COMPLETED
         this.emit("status", this.status)
 
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     receive() {
-        if (this.status !== OrderStatus.COMPLETED) return { code: 1 }
+        if (this.status !== OrderStatus.COMPLETED) return { code: 1 } as const
         
         this.status = OrderStatus.RECEIVED
         this.emit("status", this.status)
         
-        return { code: 0 }
+        return { code: 0 } as const
     }
 
     constructor(server: Server, uuid: string, oid: string) {
@@ -161,7 +161,7 @@ export class OrderManager extends EventEmitter {
         this.orders.set(oid, order)
         this.emit("new", oid)
 
-        return { code: 0, order }
+        return { code: 0, order } as const
     }
 
     get(oid: string) {
@@ -175,14 +175,14 @@ export class OrderManager extends EventEmitter {
         return {
             code: 0,
             orders: Array.from(this.orders.values())
-        }
+        } as const
     }
 
     remove(oid: string) {
         const query = this.orders.delete(oid)
         if (query) this.emit("remove", oid)
         
-        return { code: Number(!query) }
+        return { code: Number(!query) } as const
     }
     
     constructor(server: Server) {
