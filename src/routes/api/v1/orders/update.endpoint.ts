@@ -1,10 +1,11 @@
 import { Route, HTTPEndpoint } from "modules/routing/RoutingManager";
 import { Server } from "modules/server/Server"
+import { Rank } from "modules/users/UserManager";
 import { AuthenticationMiddleware } from "modules/routing/middlewares/auth.middleware";
+import { RankMiddleware } from "modules/routing/middlewares/rank.middleware";
 
 import { NextFunction, Request, Response } from "express"
 import { z } from "zod"
-import { Rank, RankMiddleware } from "modules/routing/middlewares/rank.middleware";
 
 export default new Route({
     endpoints: [
