@@ -1,5 +1,5 @@
 import { Server } from "modules/server/Server";
-import { UsersDatabase } from "modules/database/users/UsersDatabase"
+import { UserDatabase } from "modules/database/users/UserDatabase"
 import { BankDatabase } from "modules/database/bank/BankDatabase"
 import { TransactionsDatabase } from "modules/database/transactions/TransactionsDatabase";
 import { ItemsDatabase } from "modules/database/items/ItemsDatabase";
@@ -17,7 +17,7 @@ export class DatabaseManager {
         port: Number(process.env.DB_PORT),
     })
 
-    users = new UsersDatabase(this)
+    users = new UserDatabase(this)
     bank = new BankDatabase(this)
     transactions = new TransactionsDatabase(this)
     items = new ItemsDatabase(this)
