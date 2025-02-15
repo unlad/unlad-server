@@ -25,7 +25,7 @@ export class MenuManager {
         return { code: 0 }
     }
 
-    list() {
+    resolve() {
         return {
             code: 0,
             menu: Array.from(this.items.entries()).map(item => {

@@ -8,7 +8,7 @@ export default new Route({
             method: "GET",
             handlers: [
                 async (server: Server, req: Request, res: Response, next: NextFunction) => {
-                    const query = server.menu.list()
+                    const query = server.menu.resolve()
                     res.send({ code: 0, menu: query.menu })
                 },
             ]
