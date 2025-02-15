@@ -16,10 +16,10 @@ export default new Route({
                     const { success, data } = schema.safeParse(req.session)
                     if (!success) return res.send({ code: 1 })
 
-                    const query = await server.database.bank.resolve(data.uuid)
+                    const query = await server.bank.resolve(data.uuid)
                     if (query.code) return res.send({ code: 2 })
 
-                    res.send({ code: 0, balance: query.data.balance })
+                    res.send({ code: 0, balance: query.balance })
                 },
             ]
         })

@@ -1,17 +1,18 @@
 import { RoutingManager} from "modules/routing/RoutingManager";
 import { DatabaseManager } from "modules/database/DatabaseManager";
-import { AuthManager } from "modules/auth/AuthManager";
 import { SecretManager } from "modules/secrets/SecretManager";
+import { AuthManager } from "modules/auth/AuthManager";
+import { BankManager } from "modules/bank/BankManager";
 import { ItemManager } from "modules/items/ItemManager";
 import { MenuManager } from "modules/menu/MenuManager";
 import { OrderManager } from "modules/orders/OrderManager";
+import { CookieMiddleware } from "modules/routing/middlewares/cookies.middleware";
 
 import express, { NextFunction, Request, Response } from "express";
 import extend, { Application } from "express-ws"
 import cors from "cors";
 import http from "http";
 import https from "https";
-import { CookieMiddleware } from "modules/routing/middlewares/cookies.middleware";
 
 
 export class Server {
@@ -21,6 +22,7 @@ export class Server {
     database: DatabaseManager
     secrets: SecretManager
     auth: AuthManager
+    bank: BankManager
     items: ItemManager
     menu: MenuManager
     orders: OrderManager
@@ -58,6 +60,7 @@ export class Server {
         this.routing = new RoutingManager(this)
         this.database = new DatabaseManager(this)
         this.auth = new AuthManager(this)
+        this.bank = new BankManager(this)
         this.items = new ItemManager(this)
         this.menu = new MenuManager(this)
         this.orders = new OrderManager(this)
