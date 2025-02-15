@@ -42,51 +42,6 @@ export class AuthManager {
         return { code: 0, uuid: uuidquery.data.uuid } as const
     }
 
-    // async authenticate(uuid: string, hash: string) {
-    //     const authquery = await this.database.users.authenticate(uuid, hash)
-    //     if (authquery.code) return { code: 1 }
-
-    //     const userquery = await this.database.users.resolve(uuid)
-    //     if (userquery.code) return { code: 2 }
-
-    //     const access_data = this.public_key.encrypt(JSON.stringify({
-    //         uuid: userquery.data.uuid,
-    //         secret: userquery.data.secret
-    //     }))
-
-    //     const access = jwt.sign({ data: access_data }, this.keys.private, {
-    //         algorithm: "RS512",
-    //         expiresIn: Number(process.env.ACCESS_EXPIRY) * 24 * 60 * 60
-    //     })
-
-    //     const refresh_data = this.public_key.encrypt(JSON.stringify({
-    //         uuid: userquery.data.uuid
-    //     }))
-
-    //     const refresh = jwt.sign({ data: refresh_data }, this.keys.private, {
-    //         algorithm: "RS512",
-    //         expiresIn: Number(process.env.REFRESH_EXPIRY) * 24 * 60 * 60
-    //     })
-
-    //     return {
-    //         code: 0,
-    //         access, refresh
-    //     }
-    // }
-
-    // async refresh(access: string, refresh: string) {
-    //     jwt.verify(refresh, this.keys.public, { algorithms: ["RS512"] }, (err) => {
-    //         console.log(err)
-    //     })
-
-    //     const encrypted_refresh = jwt.verify(refresh, this.keys.public, { algorithms: ["RS512"], ignoreExpiration: true }) as JwtPayload
-    //     if (encrypted_refresh.exp! > Date.now()) return { code: 1 }
-    //     if (!encrypted_refresh.data) return { code: 2 }
-
-    //     const refresh_data = JSON.parse(this.private_key.decrypt(encrypted_refresh.data))
-    //     return encrypted_refresh
-    // }
-
     constructor(server: Server) {
         this.database = server.database
         
