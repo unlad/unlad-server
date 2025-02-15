@@ -29,8 +29,8 @@ export class UserDatabase {
         return data
     }
 
-    async rank(uuid: string) {
-        const data = await this.database.call<QueryResults.Users.Rank>("user.rank", [uuid])
+    async rank(uuid: string, rank: number) {
+        const data = await this.database.call<QueryResults.Users.Rank>("user.rank", [uuid, rank])
         return data
     }
 

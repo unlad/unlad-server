@@ -3,11 +3,7 @@ import { WebSocket } from "ws";
 
 import { Server } from "modules/server/Server";
 import { HTTPRouteHandler, WSRouteHandler } from "modules/routing/RoutingManager";
-
-export enum Rank {
-    STUDENT = 0,
-    ADMIN = 1
-}
+import { Rank } from "modules/users/UserManager";
 
 export function RankMiddleware(type: "HTTP", rank: Rank): HTTPRouteHandler
 export function RankMiddleware(type: "WS", rank: Rank): WSRouteHandler

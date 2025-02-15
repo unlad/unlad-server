@@ -1,7 +1,8 @@
 import { Route, WSEndpoint } from "modules/routing/RoutingManager";
 import { Server } from "modules/server/Server"
+import { Rank } from "modules/users/UserManager";
 import { AuthenticationMiddleware } from "modules/routing/middlewares/auth.middleware";
-import { Rank, RankMiddleware } from "modules/routing/middlewares/rank.middleware";
+import { RankMiddleware } from "modules/routing/middlewares/rank.middleware";
 import { OrderStatus } from "modules/orders/OrderManager";
 
 import { NextFunction, Request } from "express"
