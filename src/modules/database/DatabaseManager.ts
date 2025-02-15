@@ -1,8 +1,8 @@
 import { Server } from "modules/server/Server";
-import { UserManager } from "modules/database/users/Users"
-import { BankManager } from "modules/database/bank/BankManager"
-import { TransactionManager } from "modules/database/transactions/TransactionManager";
-import { ItemManager } from "modules/database/items/ItemManager";
+import { UsersDatabase } from "modules/database/users/UsersDatabase"
+import { BankDatabase } from "modules/database/bank/BankDatabase"
+import { TransactionsDatabase } from "modules/database/transactions/TransactionsDatabase";
+import { ItemsDatabase } from "modules/database/items/ItemsDatabase";
 
 import pg from "pg"
 
@@ -17,10 +17,10 @@ export class DatabaseManager {
         port: Number(process.env.DB_PORT),
     })
 
-    users = new UserManager(this)
-    bank = new BankManager(this)
-    transactions = new TransactionManager(this)
-    items = new ItemManager(this)
+    users = new UsersDatabase(this)
+    bank = new BankDatabase(this)
+    transactions = new TransactionsDatabase(this)
+    items = new ItemsDatabase(this)
 
     async call<ReturnData extends Record<string, any>>(name: string, args: unknown[]) {
         const { rows, fields } = await this.pool.query({

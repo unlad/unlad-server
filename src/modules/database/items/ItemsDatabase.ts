@@ -1,7 +1,7 @@
 import { DatabaseManager } from "modules/database/DatabaseManager"
 import { QueryResults } from "modules/database/QueryResults"
 
-export class ItemManager {
+export class ItemsDatabase {
     database: DatabaseManager
 
     async list() {

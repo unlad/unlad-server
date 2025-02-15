@@ -2,7 +2,7 @@ import { DatabaseManager } from "modules/database/DatabaseManager"
 import { QueryResults } from "modules/database/QueryResults"
 import { v4 } from "uuid";
 
-export class TransactionManager {
+export class TransactionsDatabase {
     database: DatabaseManager
 
     async list(uuid: string) {

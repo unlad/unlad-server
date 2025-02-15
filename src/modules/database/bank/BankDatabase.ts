@@ -1,7 +1,7 @@
 import { DatabaseManager } from "modules/database/DatabaseManager"
 import { QueryResults } from "modules/database/QueryResults"
 
-export class BankManager {
+export class BankDatabase {
     database: DatabaseManager
 
     async resolve(uuid: string) {
