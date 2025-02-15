@@ -28,14 +28,7 @@ export class MenuManager {
     resolve() {
         return {
             code: 0,
-            menu: Array.from(this.items.entries()).map(item => {
-                return {
-                    uuid: item[0],
-                    name: item[1].name,
-                    description: item[1].description,
-                    price: item[1].price
-                } as Item
-            })
+            menu: Array.from(this.items.values())
         }
     }
 
