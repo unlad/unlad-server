@@ -19,13 +19,13 @@ export class UserDatabase {
         return data
     }
 
-    async hash(username: string) {
-        const data = await this.database.call<QueryResults.Users.Hash>("user.hash", [username])
+    async hash(handle: string) {
+        const data = await this.database.call<QueryResults.Users.Hash>("user.hash", [handle])
         return data
     }
 
-    async uuid(username: string) {
-        const data = await this.database.call<QueryResults.Users.UUID>("user.uuid", [username])
+    async uuid(handle: string) {
+        const data = await this.database.call<QueryResults.Users.UUID>("user.uuid", [handle])
         return data
     }
 

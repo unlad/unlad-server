@@ -12,7 +12,7 @@ export namespace QueryResults {
             }
         } | { code: 1 | 2 }
         
-        export type Create = { code: 0 | 1 }
+        export type Create = { code: 0 | 1 | 2 }
         export type Delete = { code: 0 | 1 }
 
         export type Hash = { 
