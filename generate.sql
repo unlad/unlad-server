@@ -903,6 +903,22 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: users users_id; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_id UNIQUE (id);
+
+
+--
+-- Name: users users_username; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_username UNIQUE (username);
+
+
+--
 -- Name: bank uuid_bank; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
