@@ -477,7 +477,7 @@ THEN
 END IF;
 
 WITH data AS (
-  SELECT items, comment, timestamp FROM transactions AS _transactions WHERE _transactions.uuid = $1
+  SELECT _transactions.uuid, _transactions.tid, _transactions.items, _transactions.comment, _transactions.timestamp FROM transactions AS _transactions WHERE _transactions.uuid = $1
 ) SELECT json_agg(data) INTO transactions FROM data;
 
 RETURN json_build_object(
@@ -567,11 +567,21 @@ END IF;
 IF (
   SELECT true 
   FROM users AS _users
-  WHERE _users.handle = $2
+  WHERE _users.id = $2
   LIMIT 1
 )
 THEN 
   RETURN json_build_object('code', 2);
+END IF;
+
+IF (
+  SELECT true 
+  FROM users AS _users
+  WHERE _users.handle = $3
+  LIMIT 1
+)
+THEN 
+  RETURN json_build_object('code', 3);
 END IF;
 
 INSERT INTO users ("uuid", "id", "username", "handle", "hash")
@@ -625,7 +635,7 @@ ALTER FUNCTION public."user.delete"(uuid uuid) OWNER TO postgres;
 -- Name: user.hash(character varying); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public."user.hash"(username character varying) RETURNS json
+CREATE FUNCTION public."user.hash"(handle character varying) RETURNS json
     LANGUAGE plpgsql
     AS $_$
 DECLARE
@@ -638,7 +648,7 @@ IF (
   SELECT NOT EXISTS (
     SELECT true 
     FROM users AS _users
-    WHERE _users.username = $1 
+    WHERE _users.handle = $1 
     LIMIT 1
   )
 )
@@ -649,7 +659,7 @@ END IF;
 WITH data AS (
   SELECT _users.hash
   FROM users AS _users
-  WHERE _users.username = $1
+  WHERE _users.handle = $1
 )
 
 SELECT data.hash
@@ -666,7 +676,7 @@ RETURN json_build_object(
 END$_$;
 
 
-ALTER FUNCTION public."user.hash"(username character varying) OWNER TO postgres;
+ALTER FUNCTION public."user.hash"(handle character varying) OWNER TO postgres;
 
 --
 -- Name: user.rank(uuid, integer); Type: FUNCTION; Schema: public; Owner: postgres
@@ -760,7 +770,7 @@ ALTER FUNCTION public."user.resolve"(uuid uuid) OWNER TO postgres;
 -- Name: user.uuid(character varying); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public."user.uuid"(username character varying) RETURNS json
+CREATE FUNCTION public."user.uuid"(handle character varying) RETURNS json
     LANGUAGE plpgsql
     AS $_$
 DECLARE
@@ -773,7 +783,7 @@ IF (
   SELECT NOT EXISTS (
     SELECT true 
     FROM users AS _users
-    WHERE _users.username = $1 
+    WHERE _users.handle = $1 
     LIMIT 1
   )
 )
@@ -784,7 +794,7 @@ END IF;
 WITH data AS (
   SELECT _users.uuid
   FROM users AS _users
-  WHERE _users.username = $1
+  WHERE _users.handle = $1
 )
 
 SELECT data.uuid
@@ -801,7 +811,7 @@ RETURN json_build_object(
 END$_$;
 
 
-ALTER FUNCTION public."user.uuid"(username character varying) OWNER TO postgres;
+ALTER FUNCTION public."user.uuid"(handle character varying) OWNER TO postgres;
 
 SET default_tablespace = '';
 
@@ -895,11 +905,11 @@ ALTER TABLE ONLY public.session
 
 
 --
--- Name: users users_uuid; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: users users_handle; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_uuid UNIQUE (uuid);
+    ADD CONSTRAINT users_handle UNIQUE (handle);
 
 
 --
@@ -911,11 +921,11 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: users users_username; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: users users_uuid; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_handle UNIQUE (handle);
+    ADD CONSTRAINT users_uuid UNIQUE (uuid);
 
 
 --
