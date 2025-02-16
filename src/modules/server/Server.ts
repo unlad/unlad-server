@@ -6,6 +6,7 @@ import { BankManager } from "modules/managers/bank/BankManager";
 import { ItemManager } from "modules/managers/items/ItemManager";
 import { MenuManager } from "modules/managers/menu/MenuManager";
 import { OrderManager } from "modules/managers/orders/OrderManager";
+import { TransactionManager } from "modules/managers/transactions/TransactionManager";
 import { UserManager } from "modules/managers/users/UserManager";
 import { CookieMiddleware } from "modules/routing/middlewares/cookies.middleware";
 
@@ -27,6 +28,7 @@ export class Server {
     items: ItemManager
     menu: MenuManager
     orders: OrderManager
+    transactions: TransactionManager
     users: UserManager
 
     async start() {
@@ -66,6 +68,7 @@ export class Server {
         this.items = new ItemManager(this)
         this.menu = new MenuManager(this)
         this.orders = new OrderManager(this)
+        this.transactions = new TransactionManager(this)
         this.users = new UserManager(this)
     }
 }

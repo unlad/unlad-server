@@ -2,7 +2,7 @@ import { DatabaseManager } from "modules/database/DatabaseManager"
 import { QueryResults } from "modules/database/QueryResults"
 import { v4 } from "uuid";
 
-export class TransactionsDatabase {
+export class TransactionDatabase {
     database: DatabaseManager
 
     async list(uuid: string) {
@@ -15,7 +15,7 @@ export class TransactionsDatabase {
         return data;
     }
 
-    async add(uuid: string, items: string, comment: string) {
+    async add(uuid: string, items: string, comment?: string) {
         const tid = v4()
 
         const data = await this.database.call<QueryResults.Transactions.Add>("transactions.add", [uuid, tid, items, comment])

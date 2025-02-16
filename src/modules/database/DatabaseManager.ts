@@ -1,7 +1,7 @@
 import { Server } from "modules/server/Server";
 import { UserDatabase } from "modules/database/users/UserDatabase"
 import { BankDatabase } from "modules/database/bank/BankDatabase"
-import { TransactionsDatabase } from "modules/database/transactions/TransactionsDatabase";
+import { TransactionDatabase } from "modules/database/transactions/TransactionDatabase";
 import { ItemsDatabase } from "modules/database/items/ItemsDatabase";
 
 import pg from "pg"
@@ -19,7 +19,7 @@ export class DatabaseManager {
 
     users = new UserDatabase(this)
     bank = new BankDatabase(this)
-    transactions = new TransactionsDatabase(this)
+    transactions = new TransactionDatabase(this)
     items = new ItemsDatabase(this)
 
     async call<ReturnData extends Record<string, any>>(name: string, args: unknown[]) {

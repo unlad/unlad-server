@@ -46,6 +46,8 @@ export namespace QueryResults {
         export type List = {
             code: 0,
             transactions: { 
+                uuid: string,
+                tid: string,
                 items: string,
                 comment?: string,
                 timestamp: string
