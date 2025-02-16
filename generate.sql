@@ -915,7 +915,7 @@ ALTER TABLE ONLY public.users
 --
 
 ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_username UNIQUE (username);
+    ADD CONSTRAINT users_handle UNIQUE (handle);
 
 
 --
