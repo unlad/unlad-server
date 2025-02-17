@@ -1,9 +1,12 @@
 import { Route, HTTPEndpoint } from "modules/routing/RoutingManager";
 import { Server } from "modules/server/Server"
+import { Rank } from "modules/managers/users/UserManager";
 
 import { NextFunction, Request, Response } from "express"
 import { v4 } from "uuid";
 import { z } from "zod"
+import { sign } from "cookie-signature";
+import { serialize } from "cookie";
 
 export default new Route({
     endpoints: [
@@ -29,8 +32,12 @@ export default new Route({
                     if (query.code) return res.send({ code: 3 })
 
                     req.session.uuid = uuid
+                    req.session.rank = Rank.STUDENT
 
-                    res.send({ code: 0 })
+                    const signature = sign(req.session.id, server.secrets.session.toString())
+                    const cookie = serialize("connect.sid", signature).split("=").join("=s%3A")
+
+                    res.send({ code: 0, cookie })
                 },  
             ]
         })
