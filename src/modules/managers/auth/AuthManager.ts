@@ -26,7 +26,8 @@ export class AuthManager {
         const hashquery = await this.database.users.hash(username)
         if (hashquery.code) return { code: 1 } as const
 
-        if (!this.verifyHash(hashquery.data.hash, hash)) return { code: 2 } as const
+        const verified = await this.verifyHash(hashquery.data.hash, hash)
+        if (!verified) return { code: 2 } as const
 
         const uuidquery = await this.database.users.uuid(username)
         if (uuidquery.code) return { code: 2 } as const
