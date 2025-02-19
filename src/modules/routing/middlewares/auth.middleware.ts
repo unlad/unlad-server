@@ -10,7 +10,7 @@ export function AuthenticationMiddleware(type: "HTTP" | "WS") {
     switch(type) {
         case "HTTP":
             return ((server: Server, req: Request, res: Response, next: NextFunction) => {
-                if (!req.session.uuid) return res.status(401).send()   
+                if (!req.session.uuid) return res.status(401).send({ code: 401 })   
                 next()
             }) as HTTPRouteHandler
 

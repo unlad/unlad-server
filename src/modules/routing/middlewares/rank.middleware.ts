@@ -11,8 +11,8 @@ export function RankMiddleware(type: "HTTP" | "WS", rank: Rank) {
     switch(type) {
         case "HTTP":
             return ((server: Server, req: Request, res: Response, next: NextFunction) => {
-                if (!req.session.rank) return res.status(401).send()
-                if (req.session.rank < rank) return res.status(403).send()
+                if (!req.session.rank) return res.status(401).send({ code: 401 })
+                if (req.session.rank < rank) return res.status(403).send({ code: 403 })
                 next()
             }) as HTTPRouteHandler
 
