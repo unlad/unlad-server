@@ -679,6 +679,44 @@ END$_$;
 ALTER FUNCTION public."user.hash"(handle character varying) OWNER TO postgres;
 
 --
+-- Name: user.list(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public."user.list"() RETURNS json
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+
+users json;
+
+BEGIN
+
+IF (
+  SELECT NOT EXISTS (
+    SELECT true 
+    FROM users AS _users
+    LIMIT 1
+  )
+)
+THEN
+  RETURN json_build_object('code', 1); 
+END IF;
+
+WITH data AS (
+  SELECT uuid, id, username, handle, rank, created FROM users
+) SELECT json_agg(data) INTO users FROM data;
+
+RETURN json_build_object(
+  'code', 0,
+  'users', users
+) ;
+
+END$$;
+
+
+ALTER FUNCTION public."user.list"() OWNER TO postgres;
+
+--
 -- Name: user.rank(uuid, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 

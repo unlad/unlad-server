@@ -9,6 +9,11 @@ export class UserDatabase {
         return data;
     }
 
+    async list() {
+        const data = await this.database.call<QueryResults.Users.List>("user.list", [])
+        return data;
+    }
+
     async create(uuid: string, id: string, username: string, hash: string) {
         const data = await this.database.call<QueryResults.Users.Create>("user.create", [uuid, id, username, hash])
         return data

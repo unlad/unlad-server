@@ -11,6 +11,18 @@ export namespace QueryResults {
                 created: string
             }
         } | { code: 1 | 2 }
+
+        export type List = {
+            code: 0
+            users: {
+                uuid: string
+                id: string
+                username: string
+                handle: string
+                rank: number,
+                created: string
+            }[]
+        } | { code: 1 }
         
         export type Create = { code: 0 | 1 | 2 }
         export type Delete = { code: 0 | 1 }

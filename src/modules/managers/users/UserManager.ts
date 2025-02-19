@@ -23,6 +23,13 @@ export class UserManager {
         } as const
     }
 
+    async list() {
+        const query = await this.server.database.users.list()
+        if (query.code) return { code: 1 } as const
+
+        return { code: 0, users: query.users } as const
+    }
+
     async create(uuid: string, id: string, username: string, hash: string) {
         const query = await this.server.database.users.create(uuid, id, username, hash)
         if (query.code) return { code: 1 } as const
