@@ -18,15 +18,15 @@ export class AuthManager {
         })
     }
 
-    async verifyHash(hash: string, data: string) {
-        return verify(hash, data)
+    async verifyHash(plain: string, hash: string) {
+        return await verify(hash, plain)
     }
 
     async authenticate(username: string, hash: string) {
         const hashquery = await this.database.users.hash(username)
         if (hashquery.code) return { code: 1 } as const
 
-        const verified = await this.verifyHash(hashquery.data.hash, hash)
+        const verified = await this.verifyHash(hash, hashquery.data.hash)
         if (!verified) return { code: 2 } as const
 
         const uuidquery = await this.database.users.uuid(username)
