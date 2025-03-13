@@ -1,5 +1,3 @@
 .vscode
-
-/volumes
-/secrets
-/node_modules
+./node_modules
+./docker

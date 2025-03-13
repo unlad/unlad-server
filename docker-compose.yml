@@ -1,9 +1,9 @@
 services:
   db:
-    env_file: ".env"
+    env_file: .env
     build: 
       context: .
-      dockerfile: dbdockerfile
+      dockerfile: ./docker/dockerfiles/database
     image: postgres
     environment:
       PGUSER: $DB_USER
@@ -11,17 +11,19 @@ services:
     ports:
     - "5432:5432"
     volumes:
-      - ./volumes/pgdata/:/var/lib/postgresql/data
+      - ./docker/volumes/pgdata/:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
 
-  server: 
-    build: .
-    command: npm start
+  server:
     env_file: ".env"
+    build:
+      context: .
+      dockerfile: ./docker/dockerfiles/server
+    command: npm start
     develop:
       watch:
       - action: sync+restart
