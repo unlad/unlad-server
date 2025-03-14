@@ -1,7 +1,7 @@
 {
   "name": "freeren-server",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "node --import=tsx --watch ./src/index.ts",
@@ -9,13 +9,24 @@
     "start": "node --import=tsx ./src/index.ts",
     "start:docker": "docker compose up",
     "lint": "eslint . --ext .ts --fix --config .eslintrc.json",
-    "build": "docker compose build --no-cache"
+    "build": "docker compose build --no-cache",
+    "test": "jest --watch"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@types/express": "^5.0.0",
+    "@types/express-ws": "^3.0.5",
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.13.10",
     "eslint": "^9.22.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.6",
     "tsx": "^4.19.3",
     "typescript": "~5.7.2",
     "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "express-ws": "^5.0.2"
   }
 }
