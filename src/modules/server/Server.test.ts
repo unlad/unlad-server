@@ -4,8 +4,8 @@ import { describe, test, expect } from "@jest/globals";
 
 import { Server } from "./Server";
 
-const key = readFileSync("mock/ssl/mock.key")
-const cert = readFileSync("mock/ssl/mock.crt")
+const key = readFileSync("mock/secrets/ssl/server.key")
+const cert = readFileSync("mock/secrets/ssl/server.crt")
 
 describe("server", () => {
     let server: Server

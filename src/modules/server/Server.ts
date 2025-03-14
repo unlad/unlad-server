@@ -6,7 +6,7 @@ import express from "express"
 import extend from "express-ws"
 import cors from "cors"
 
-export interface ServerStartOptions {
+export type ServerStartOptions = {
     ssl?: {
         key: Buffer | string,
         cert: Buffer | string
