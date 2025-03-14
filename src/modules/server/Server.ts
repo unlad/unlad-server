@@ -4,6 +4,7 @@ import { AddressInfo } from "net"
 
 import express from "express"
 import extend from "express-ws"
+import cors from "cors"
 
 export interface ServerStartOptions {
     ssl?: {
@@ -49,6 +50,10 @@ export class Server {
 
     constructor() {
         const app = express()
+
+        app.use(express.json())
+        app.use(cors())
+
         this.app = app
     }
 }
