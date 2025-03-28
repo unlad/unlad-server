@@ -3,7 +3,7 @@ import https from "https"
 import { AddressInfo } from "net"
 
 import express from "express"
-import extend from "express-ws"
+import extend, { Application } from "express-ws"
 import cors from "cors"
 
 export type ServerStartOptions = {
@@ -18,7 +18,7 @@ export type ServerStartOptions = {
 export class Server {
     private _server?: http.Server | https.Server
 
-    app: express.Application | extend.Application
+    app: Application
     port: number | null = null
 
     async start(options?: ServerStartOptions): Promise<{ ssl: boolean, port: number }> {
@@ -51,9 +51,10 @@ export class Server {
     constructor() {
         const app = express()
 
-        app.use(express.json())
-        app.use(cors())
+        app.use(express.json());
+        app.use(cors());
 
-        this.app = app
+        // force extended express type hack
+        this.app = extend(app).app
     }
 }
