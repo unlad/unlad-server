@@ -1,11 +1,11 @@
 import { describe, test, expect } from "@jest/globals";
 
-import { RoutingManager } from "./RoutingManager";
+import { Routing } from "./Routing";
 
 describe("routing manager", () => {
-    let routing: RoutingManager
+    let routing: Routing
 
-    beforeEach(() => { routing = new RoutingManager() })
+    beforeEach(() => { routing = new Routing() })
 
     test("get routes", async () => {
         // shit doesn't like to import routes

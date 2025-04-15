@@ -3,7 +3,7 @@ import { fileURLToPath } from "url";
 
 import { Server } from "modules/server/Server";
 import { readFileSync } from "fs";
-import { RoutingManager } from "modules/routing/RoutingManager";
+import { Routing } from "modules/routing/Routing";
 
 global.__filename = fileURLToPath(import.meta.url);
 global.__dirname = dirname(__filename);
@@ -15,7 +15,7 @@ async function main(): Promise<void> {
     const server = new Server()
     server.start();
 
-    const routing = new RoutingManager()
+    const routing = new Routing()
     await routing.register(server)
 }
 

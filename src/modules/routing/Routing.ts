@@ -59,7 +59,7 @@ export class WSEndpoint {
     }
 }
 
-export class RoutingManager {
+export class Routing {
     async getRoutes(base: string, path: string[] = []) {
         const routes = []
         const dir = join(base, ...path);

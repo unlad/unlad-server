@@ -23,7 +23,7 @@ export type SecretsGenerateOptions = {
     generate?: ("ssl" | "session")[]
 })
 
-export class SecretManager {
+export class Secrets {
     ssl?: { key: Buffer, cert: Buffer }
     session?: { secret: Buffer }
 

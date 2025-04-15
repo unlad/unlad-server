@@ -3,12 +3,12 @@ import { existsSync, rmSync } from "fs";
 
 import { describe, test, expect } from "@jest/globals";
 
-import { SecretManager } from "./SecretManager";
+import { Secrets } from "./Secrets";
 
 describe("secret manager", () => {
-    let secrets: SecretManager
+    let secrets: Secrets
 
-    beforeEach(() => { secrets = new SecretManager() })
+    beforeEach(() => { secrets = new Secrets() })
 
     test("load", async () => {
         const source = join("mock", "secrets")

@@ -1,4 +1,4 @@
-import { Route, HTTPEndpoint } from "modules/routing/RoutingManager";
+import { Route, HTTPEndpoint } from "modules/routing/Routing";
 import { Server } from "modules/server/Server"
 
 import { NextFunction, Request, Response } from "express"
