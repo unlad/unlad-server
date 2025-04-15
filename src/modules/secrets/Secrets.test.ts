@@ -5,7 +5,7 @@ import { describe, test, expect } from "@jest/globals";
 
 import { Secrets } from "./Secrets";
 
-describe("secret manager", () => {
+describe("secrets", () => {
     let secrets: Secrets
 
     beforeEach(() => { secrets = new Secrets() })

@@ -2,7 +2,7 @@ import { describe, test, expect } from "@jest/globals";
 
 import { Routing } from "./Routing";
 
-describe("routing manager", () => {
+describe("routing", () => {
     let routing: Routing
 
     beforeEach(() => { routing = new Routing() })

@@ -1,3 +1,8 @@
+import { UserDatabase } from "modules/database/users/UserDatabase"
+import { BankDatabase } from "modules/database/bank/BankDatabase"
+import { TransactionDatabase } from "modules/database/transactions/TransactionDatabase";
+import { ItemsDatabase } from "modules/database/items/ItemsDatabase";
+
 import pg from "pg"
 
 export class Database {
@@ -9,6 +14,11 @@ export class Database {
         host: process.env.DB_HOST,
         port: Number(process.env.DB_PORT),
     })
+
+    users = new UserDatabase(this)
+    bank = new BankDatabase(this)
+    transactions = new TransactionDatabase(this)
+    items = new ItemsDatabase(this)
 
     async call<ReturnData extends Record<string, any>>(name: string, args: unknown[]) {
         const { rows, fields } = await this.pool.query({
