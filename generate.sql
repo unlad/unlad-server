@@ -577,7 +577,7 @@ END IF;
 IF (
   SELECT true 
   FROM users AS _users
-  WHERE _users.handle = $3
+  WHERE _users.email = $3
   LIMIT 1
 )
 THEN 
