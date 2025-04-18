@@ -8,7 +8,7 @@ import { z } from "zod";
 export default new Route({
     endpoints: [
         new HTTPEndpoint({
-            method: "GET",
+            method: "POST",
             handlers: [
                 AuthenticationMiddleware("HTTP"),
                 async (server: Server, req: Request, res: Response, next: NextFunction) => {
