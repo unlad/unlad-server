@@ -16,14 +16,14 @@ export default new Route({
                     if (req.session.uuid) return res.send({ code: 1 })
 
                     const schema = z.object({
-                        username: z.string().min(3).max(32),
+                        email: z.string().email(),
                         hash: z.string().length(128)
                     })
 
                     const { success, data } = schema.safeParse(req.body)
                     if (!success) return res.send({ code: 2 })
 
-                    const authquery = await server.auth.authenticate(data.username, data.hash)
+                    const authquery = await server.auth.authenticate(data.email, data.hash)
                     if (authquery.code) return res.send({ code: 3 })
                     
                     const userquery = await server.users.resolve(authquery.uuid)
