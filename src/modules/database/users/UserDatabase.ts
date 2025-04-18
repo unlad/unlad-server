@@ -14,8 +14,8 @@ export class UserDatabase {
         return data;
     }
 
-    async create(uuid: string, id: string, username: string, hash: string) {
-        const data = await this.database.call<QueryResults.Users.Create>("user.create", [uuid, id, username, hash])
+    async create(uuid: string, id: string, email: string, hash: string) {
+        const data = await this.database.call<QueryResults.Users.Create>("user.create", [uuid, id, email, hash])
         return data
     }
 
@@ -24,13 +24,13 @@ export class UserDatabase {
         return data
     }
 
-    async hash(handle: string) {
-        const data = await this.database.call<QueryResults.Users.Hash>("user.hash", [handle])
+    async hash(email: string) {
+        const data = await this.database.call<QueryResults.Users.Hash>("user.hash", [email])
         return data
     }
 
-    async uuid(handle: string) {
-        const data = await this.database.call<QueryResults.Users.UUID>("user.uuid", [handle])
+    async uuid(email: string) {
+        const data = await this.database.call<QueryResults.Users.UUID>("user.uuid", [email])
         return data
     }
 

@@ -16,8 +16,7 @@ export class UserManager {
             code: 0,
             uuid: query.data.uuid,
             id: query.data.id,
-            username: query.data.username,
-            handle: query.data.handle,
+            email: query.data.email,
             rank: query.data.rank,
             created: query.data.created
         } as const
@@ -30,8 +29,8 @@ export class UserManager {
         return { code: 0, users: query.users } as const
     }
 
-    async create(uuid: string, id: string, username: string, hash: string) {
-        const query = await this.server.database.users.create(uuid, id, username, hash)
+    async create(uuid: string, id: string, email: string, hash: string) {
+        const query = await this.server.database.users.create(uuid, id, email, hash)
         if (query.code) return { code: 1 } as const
 
         return { code: 0 } as const
@@ -44,15 +43,15 @@ export class UserManager {
         return { code: 0 } as const
     }
 
-    async hash(uuid: string) {
-        const query = await this.server.database.users.hash(uuid)
+    async hash(email: string) {
+        const query = await this.server.database.users.hash(email)
         if (query.code) return { code: 1 } as const
 
         return { code: 0, hash: query.data.hash } as const
     }
 
-    async uuid(username: string) {
-        const query = await this.server.database.users.uuid(username)
+    async uuid(email: string) {
+        const query = await this.server.database.users.uuid(email)
         if (query.code) return { code: 1 } as const
 
         return { code: 0, uuid: query.data.uuid } as const
