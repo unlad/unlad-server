@@ -5,8 +5,7 @@ export namespace QueryResults {
             data: {
                 uuid: string
                 id: string
-                username: string
-                handle: string
+                email: string
                 rank: number,
                 created: string
             }
@@ -17,8 +16,7 @@ export namespace QueryResults {
             users: {
                 uuid: string
                 id: string
-                username: string
-                handle: string
+                email: string
                 rank: number,
                 created: string
             }[]

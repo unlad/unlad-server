@@ -1,3 +1,11 @@
+import { AuthManager } from "modules/server/auth/AuthManager";
+import { BankManager } from "modules/server/bank/BankManager";
+import { ItemManager } from "modules/server/items/ItemManager";
+import { MenuManager } from "modules/server/menu/MenuManager";
+import { OrderManager } from "modules/server/orders/OrderManager";
+import { TransactionManager } from "modules/server/transactions/TransactionManager";
+import { UserManager } from "modules/server/users/UserManager";
+
 import http from "http"
 import https from "https"
 import { AddressInfo } from "net"
@@ -5,6 +13,14 @@ import { AddressInfo } from "net"
 import express from "express"
 import extend, { Application } from "express-ws"
 import cors from "cors"
+import { Database } from "modules/database/Database";
+
+export type ServerInitOptions = {
+    auth: {
+        secret: string
+        max_age: number
+    }
+}
 
 export type ServerStartOptions = {
     ssl?: {
@@ -20,6 +36,14 @@ export class Server {
 
     app: Application
     port: number | null = null
+
+    auth: AuthManager
+    users: UserManager
+    bank: BankManager
+    items: ItemManager
+    menu: MenuManager
+    orders: OrderManager
+    transactions: TransactionManager
 
     async start(options?: ServerStartOptions): Promise<{ ssl: boolean, port: number }> {
         options = options ?? {}
@@ -48,7 +72,7 @@ export class Server {
         this._server?.unref()
     }
 
-    constructor() {
+    constructor(database: Database, options: ServerInitOptions) {
         const app = express()
 
         app.use(express.json());
@@ -56,5 +80,13 @@ export class Server {
 
         // force extended express type hack
         this.app = extend(app).app
+
+        this.auth = new AuthManager(database, this, { secret: options.auth.secret, max_age: options.auth.max_age } )
+        this.users = new UserManager(database)
+        this.bank = new BankManager(database)
+        this.items = new ItemManager(database)
+        this.menu = new MenuManager(this.items)
+        this.orders = new OrderManager(database, this.items)
+        this.transactions = new TransactionManager(database)
     }
 }

@@ -60,7 +60,7 @@ export class WSEndpoint {
 }
 
 export class Routing {
-    async getRoutes(base: string, path: string[] = []) {
+    async getRoutes(base: string, path: string[] = []): Promise<{ path: string, data: Route }[]> {
         const routes = []
         const dir = join(base, ...path);
         const items = readdirSync(dir);
@@ -77,7 +77,7 @@ export class Routing {
 
                 const data: Route = (await import(`file:///${file}`)).default as Route;
                 routes.push({ path: route, data })
-            } else routes.concat(await this.getRoutes(base, [...path, item]));
+            } else routes.push(...await this.getRoutes(base, [...path, item]));
         }
 
         return routes

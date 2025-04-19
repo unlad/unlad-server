@@ -5,15 +5,16 @@ import { ItemsDatabase } from "modules/database/items/ItemsDatabase";
 
 import pg from "pg"
 
-export class Database {
-    pool: pg.Pool = new pg.Pool({
-        database: process.env.DB_NAME,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
+export type DatabaseStartOptions = {
+    name: string
+    user: string
+    password: string
+    host: string
+    port: number
+}
 
-        host: process.env.DB_HOST,
-        port: Number(process.env.DB_PORT),
-    })
+export class Database {
+    _pool?: pg.Pool
 
     users = new UserDatabase(this)
     bank = new BankDatabase(this)
@@ -21,7 +22,7 @@ export class Database {
     items = new ItemsDatabase(this)
 
     async call<ReturnData extends Record<string, any>>(name: string, args: unknown[]) {
-        const { rows, fields } = await this.pool.query({
+        const { rows, fields } = await this._pool!.query({
             text: `SELECT "${name}"(${args.map((_, i) => `$${++i}`).join(',')})`,
             values: args
         })
@@ -29,8 +30,16 @@ export class Database {
         return rows[0][fields[0].name] as ReturnData;
     }
 
-    async connect() {
-        await this.pool.connect()
+    async connect(options: DatabaseStartOptions) {
+        this._pool = new pg.Pool({
+            database: options.name,
+            user: options.user,
+            password: options.password,
+            host: options.host,
+            port: options.port
+        })
+        
+        await this._pool.connect()
         console.log("Connected to database")
     }
 }
