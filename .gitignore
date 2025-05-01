@@ -27,3 +27,4 @@ dist-ssr
 .env
 /mock/temp/*
 /secrets
+/tools
