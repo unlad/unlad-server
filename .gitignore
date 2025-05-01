@@ -26,3 +26,4 @@ dist-ssr
 /docker/volumes/*
 .env
 /mock/temp/*
+/secrets
