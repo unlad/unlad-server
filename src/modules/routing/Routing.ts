@@ -5,6 +5,7 @@ import { Request, Response, NextFunction } from "express"
 import { WebSocket } from "ws"
 
 import { Server } from "modules/server/Server"
+import { LogMiddleware } from "modules/routing/middlewares/log.middleware";
 
 export type HTTPRouteHandler = {
     (server: Server, req: Request, res: Response, next: NextFunction): void
@@ -120,6 +121,8 @@ export class Routing {
         source = source ?? join(__dirname, "routes")
         const routes = await this.getRoutes(source)
         
+        server.app.use(LogMiddleware())
+
         for (const route of routes) {
             this.registerRoute(server, route.path, route.data)
         }

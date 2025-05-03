@@ -9,7 +9,7 @@ import { z } from "zod"
 export default new Route({
     endpoints: [
         new HTTPEndpoint({
-            method: "POST",
+            method: "GET",
             handlers: [
                 AuthenticationMiddleware("HTTP"),
                 async (server: Server, req: Request, res: Response, next: NextFunction) => {
@@ -26,7 +26,7 @@ export default new Route({
                     if (query.order.uuid !== session.data.uuid && session.data.rank < Rank.ADMIN) return res.send({ code: 4 })
                     
                     const items = Array.from(query.order.items.values()).map(item => { return { uuid: item.uuid, amount: item.amount } }).join(";")
-                    res.send({ code: 0, items, status: query.order.status })
+                    res.send({ code: 0, uuid: query.order.uuid, items })
                 }
             ]
         })
