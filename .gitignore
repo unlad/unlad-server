@@ -23,8 +23,11 @@ dist-ssr
 *.sln
 *.sw?
 
-/docker/volumes/*
+# Custom
 *.env
+
+/docker/volumes/*
 /mock/temp/*
 /secrets
 /tools
+/static

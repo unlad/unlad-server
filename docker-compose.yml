@@ -44,6 +44,7 @@ services:
         condition: service_healthy
     volumes:
       - ./secrets/:/app/secrets
+      - ./static/:/app/static
 
   adminer:
     image: adminer

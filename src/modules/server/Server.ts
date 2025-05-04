@@ -5,6 +5,7 @@ import { MenuManager } from "modules/server/menu/MenuManager";
 import { OrderManager } from "modules/server/orders/OrderManager";
 import { TransactionManager } from "modules/server/transactions/TransactionManager";
 import { UserManager } from "modules/server/users/UserManager";
+import { Database } from "modules/database/Database";
 
 import http from "http"
 import https from "https"
@@ -13,7 +14,6 @@ import { AddressInfo } from "net"
 import express from "express"
 import extend, { Application } from "express-ws"
 import cors from "cors"
-import { Database } from "modules/database/Database";
 
 export type ServerInitOptions = {
     auth: {
@@ -74,6 +74,7 @@ export class Server {
 
     constructor(database: Database, options: ServerInitOptions) {
         const app = express()
+        app.use(express.static('static'))
 
         app.use(express.json());
         app.use(cors());
