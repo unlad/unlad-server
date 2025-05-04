@@ -5,12 +5,13 @@ CREATE DATABASE data;
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.3 (Debian 16.3-1.pgdg120+1)
--- Dumped by pg_dump version 16.3 (Debian 16.3-1.pgdg120+1)
+-- Dumped from database version 17.4 (Debian 17.4-1.pgdg120+2)
+-- Dumped by pg_dump version 17.4 (Debian 17.4-1.pgdg120+2)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -546,13 +547,12 @@ END$_$;
 ALTER FUNCTION public."transactions.resolve"(tid uuid) OWNER TO postgres;
 
 --
--- Name: user.create(uuid, text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: user.create(uuid, text, text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public."user.create"(uuid uuid, id text, email text, hash text) RETURNS json
+CREATE FUNCTION public."user.create"(uuid uuid, id text, name text, email text, hash text) RETURNS json
     LANGUAGE plpgsql
-    AS $_$
-BEGIN
+    AS $_$BEGIN
 
 IF (
   SELECT true 
@@ -577,15 +577,15 @@ END IF;
 IF (
   SELECT true 
   FROM users AS _users
-  WHERE _users.email = $3
+  WHERE _users.email = $4
   LIMIT 1
 )
 THEN 
   RETURN json_build_object('code', 3);
 END IF;
 
-INSERT INTO users ("uuid", "id", "email", "hash")
-VALUES ($1, $2, $3, $4);
+INSERT INTO users ("uuid", "id", "name", "email", "hash")
+VALUES ($1, $2, $3, $4, $5);
 
 INSERT INTO bank ("uuid")
 VALUES ($1);
@@ -596,7 +596,7 @@ END;
 $_$;
 
 
-ALTER FUNCTION public."user.create"(uuid uuid, id text, email text, hash text) OWNER TO postgres;
+ALTER FUNCTION public."user.create"(uuid uuid, id text, name text, email text, hash text) OWNER TO postgres;
 
 --
 -- Name: user.delete(uuid); Type: FUNCTION; Schema: public; Owner: postgres
@@ -637,8 +637,7 @@ ALTER FUNCTION public."user.delete"(uuid uuid) OWNER TO postgres;
 
 CREATE FUNCTION public."user.hash"(email text) RETURNS json
     LANGUAGE plpgsql
-    AS $_$
-DECLARE
+    AS $_$DECLARE
 
 hash text;
 
@@ -703,7 +702,7 @@ THEN
 END IF;
 
 WITH data AS (
-  SELECT uuid, id, email, rank, created FROM users
+  SELECT uuid, id, name, email, rank, created FROM users
 ) SELECT json_agg(data) INTO users FROM data;
 
 RETURN json_build_object(
@@ -754,10 +753,10 @@ ALTER FUNCTION public."user.rank"(uuid uuid, rank integer) OWNER TO postgres;
 
 CREATE FUNCTION public."user.resolve"(uuid uuid) RETURNS json
     LANGUAGE plpgsql
-    AS $_$
-DECLARE
+    AS $_$DECLARE
 
 id text;
+name text;
 email text;
 rank integer;
 created timestamp;
@@ -777,13 +776,13 @@ THEN
 END IF;
 
 WITH data AS (
-  SELECT _users.id, _users.email, _users.rank, _users.created
+  SELECT _users.id, _users.name, _users.email, _users.rank, _users.created
   FROM users AS _users
   WHERE _users.uuid = $1
 )
 
-SELECT data.id, data.email, data.rank, data.created
-INTO id, email, rank, created
+SELECT data.id, data.name, data.email, data.rank, data.created
+INTO id, name, email, rank, created
 FROM data;
 
 RETURN json_build_object(
@@ -791,6 +790,7 @@ RETURN json_build_object(
   'data', json_build_object(
     'uuid', $1,
     'id', id,
+    'name', name,
     'email', email,
     'rank', rank,
     'created', created
@@ -808,8 +808,7 @@ ALTER FUNCTION public."user.resolve"(uuid uuid) OWNER TO postgres;
 
 CREATE FUNCTION public."user.uuid"(email text) RETURNS json
     LANGUAGE plpgsql
-    AS $_$
-DECLARE
+    AS $_$DECLARE
 
 uuid uuid;
 
@@ -914,6 +913,7 @@ ALTER TABLE public.transactions OWNER TO postgres;
 CREATE TABLE public.users (
     uuid uuid NOT NULL,
     id text NOT NULL,
+    name text NOT NULL,
     email text NOT NULL,
     hash text NOT NULL,
     rank integer DEFAULT 0 NOT NULL,
