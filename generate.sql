@@ -486,7 +486,7 @@ WITH data AS (
 
 RETURN json_build_object(
   'code', 0,
-  'transactions', transactions
+  'transactions', COALESCE(transactions, '[]'::json)
 ) ;
 
 END$_$;
