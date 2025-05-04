@@ -2,7 +2,7 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 
 import { Secrets } from "modules/secrets/Secrets";
-import { Server, ServerStartOptions } from "modules/server/Server";
+import { Server } from "modules/server/Server";
 import { Database } from "modules/database/Database";
 import { Routing } from "modules/routing/Routing";
 import { Config } from "modules/config/Config";
