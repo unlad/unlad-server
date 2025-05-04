@@ -10,10 +10,12 @@ import { Database } from "modules/database/Database";
 import http from "http"
 import https from "https"
 import { AddressInfo } from "net"
+import { join } from "path";
 
 import express from "express"
 import extend, { Application } from "express-ws"
 import cors from "cors"
+import fileUpload from "express-fileupload";
 
 export type ServerInitOptions = {
     auth: {
@@ -78,6 +80,14 @@ export class Server {
 
         app.use(express.json());
         app.use(cors());
+
+        app.use(fileUpload({
+            limits: { fileSize: 5 * 1024 * 1024 },
+            useTempFiles: true,
+            tempFileDir: join(global.__dirname, "..", "tmp"),
+            safeFileNames: true,
+            abortOnLimit: true
+        }))
 
         // force extended express type hack
         this.app = extend(app).app
