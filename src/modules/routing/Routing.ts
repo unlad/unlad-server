@@ -21,6 +21,7 @@ export type RouteOptions = {
 
 export type HTTPEndpointOptions<Method> = {
     method: Method
+    params?: string[]
     handlers: HTTPRouteHandler[]
 }
 
@@ -42,10 +43,12 @@ export class HTTPEndpoint<Method extends "ALL" | "GET" | "POST"> {
     type = "http" as const;
 
     method: Method;
+    params?: string[]
     handlers: HTTPRouteHandler[];
 
     constructor(options: HTTPEndpointOptions<Method>) {
         this.method = options.method;
+        this.params = options.params
         this.handlers = options.handlers;
     }
 }
@@ -86,7 +89,7 @@ export class Routing {
 
     async registerRoute(server: Server, routepath: string, data: Route) {
         for (let endpoint of data.endpoints) {
-            const route = server.app.route(routepath)
+            let route = server.app.route(routepath)
 
             switch(endpoint.type) {
                 case "http":
@@ -97,6 +100,12 @@ export class Routing {
                     } as const;
 
                     const method = methods[endpoint.method]
+
+                    if (endpoint.params) {
+                        const params = endpoint.params.map(query => `:${query}`)
+                        route = server.app.route([route.path, ...params].join("/"))
+                    }
+
                     route[method](...endpoint.handlers.map(handler => {
                         return async (req: Request, res: Response, next: NextFunction) => {
                             handler(server, req, res, next)
