@@ -15,20 +15,10 @@ export default new Route({
                 AuthenticationMiddleware("HTTP"),
                 RankMiddleware("HTTP", Rank.ADMIN),
                 async (server: Server, req: Request, res: Response, next: NextFunction) => {
-                    const schema = z.object({ uuid: z.string().uuid() })
-                    const { success, data } = schema.safeParse(req.session)
-                    if (!success) return res.send({ code: 1 })
-
-                    const query = await server.users.resolve(data.uuid)
+                    const query = await server.users.list()
                     if (query.code) return res.send({ code: 2 })
 
-                    res.send({ 
-                        code: 0,
-                        uuid: query.uuid,
-                        id: query.id,
-                        email: query.email,
-                        created: query.created
-                    })
+                    res.send({ code: 0, users: query.users })
                 },  
             ]
         })
