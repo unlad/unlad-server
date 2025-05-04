@@ -45,7 +45,7 @@ export class ItemManager {
         const reload = await this.loadItems()
         if (reload.code) return { code: 2 } as const
 
-        return { code: 0 } as const
+        return { code: 0, uuid } as const
     }
 
     async rename(uuid: string, name: string) {
