@@ -18,7 +18,7 @@ export default new Route({
                     if (!session.success) return res.send({ code: 1 })
                     
                     const bodyschema = z.object({ oid: z.string().uuid() })
-                    const body = bodyschema.safeParse(req.body)
+                    const body = bodyschema.safeParse(req.query)
                     if (!body.success) return res.send({ code: 2 })
 
                     const query = server.orders.get(body.data.oid)
