@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { WebSocket } from "ws";
 
 import { Server } from "modules/server/Server";
-import { HTTPRouteHandler, WSRouteHandler } from "modules/routing/RoutingManager";
+import { HTTPRouteHandler, WSRouteHandler } from "modules/routing/Routing";
 
 export function AuthenticationMiddleware(type: "HTTP"): HTTPRouteHandler
 export function AuthenticationMiddleware(type: "WS"): WSRouteHandler
