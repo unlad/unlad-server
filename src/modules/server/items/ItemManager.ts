@@ -18,6 +18,8 @@ export class ItemManager {
         const query = await this.database.items.list()
         if (query.code) return { code: 1 } as const
 
+        this.items.clear()
+
         for (const item of query.items) {
             this.items.set(item.uuid, item as Item)
         }
