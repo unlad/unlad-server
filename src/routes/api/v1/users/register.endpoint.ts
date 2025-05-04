@@ -18,6 +18,7 @@ export default new Route({
                     
                     const schema = z.object({
                         id: z.string(),
+                        name: z.string().max(128),
                         email: z.string().email(),
                         hash: z.string().length(128)
                     })
@@ -28,7 +29,7 @@ export default new Route({
                     const uuid = v4()
                     const hash = await server.auth.getHash(data.hash)
 
-                    const query = await server.users.create(uuid, data.id, data.email, hash)
+                    const query = await server.users.create(uuid, data.id, data.name, data.email, hash)
                     if (query.code) return res.send({ code: 3 })
 
                     req.session.uuid = uuid

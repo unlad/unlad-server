@@ -14,8 +14,8 @@ export class UserDatabase {
         return data;
     }
 
-    async create(uuid: string, id: string, username: string, hash: string) {
-        const data = await this.database.call<QueryResults.Users.Create>("user.create", [uuid, id, username, hash])
+    async create(uuid: string, id: string, name: string, email: string, hash: string) {
+        const data = await this.database.call<QueryResults.Users.Create>("user.create", [uuid, id, name, email, hash])
         return data
     }
 

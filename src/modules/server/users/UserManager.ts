@@ -16,6 +16,7 @@ export class UserManager {
             code: 0,
             uuid: query.data.uuid,
             id: query.data.id,
+            name: query.data.name,
             email: query.data.email,
             rank: query.data.rank,
             created: query.data.created
@@ -29,8 +30,8 @@ export class UserManager {
         return { code: 0, users: query.users } as const
     }
 
-    async create(uuid: string, id: string, email: string, hash: string) {
-        const query = await this.database.users.create(uuid, id, email, hash)
+    async create(uuid: string, id: string, name: string, email: string, hash: string) {
+        const query = await this.database.users.create(uuid, id, name, email, hash)
         if (query.code) return { code: 1 } as const
 
         return { code: 0 } as const

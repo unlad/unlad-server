@@ -23,6 +23,7 @@ export default new Route({
                         code: 0,
                         uuid: query.uuid,
                         id: query.id,
+                        name: query.name,
                         email: query.email,
                         created: query.created
                     })
