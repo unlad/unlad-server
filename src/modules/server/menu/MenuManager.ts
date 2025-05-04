@@ -16,9 +16,9 @@ export class MenuManager {
 
     remove(uuid: string) {
         const result = this.items.delete(uuid)
-        if (!result) return { code: 0 } as const
+        if (!result) return { code: 1 } as const
         
-        return { code: 1 } as const
+        return { code: 0 } as const
     }
 
     clear() {
