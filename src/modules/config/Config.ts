@@ -2,7 +2,7 @@ import "dotenv";
 import { config } from "dotenv";
 
 export class Config {
-    environment: "TEST" | "PROD";
+    environment: "PROD" | string;
 
     web: {
         port: number,

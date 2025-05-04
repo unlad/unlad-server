@@ -38,7 +38,7 @@ async function main(): Promise<void> {
     const routing = new Routing()
     await routing.register(server)
     
-    server.start({ ssl: secrets.ssl, port: config.web.port })
+    server.start({ ssl: config.environment == "PROD" && secrets.ssl, port: config.web.port })
 }
 
 main();
