@@ -256,7 +256,10 @@ IF (
   )
 )
 THEN
-  RETURN json_build_object('code', 1); 
+  RETURN json_build_object(
+    'code', 0,
+    'items', '[]'::json
+  );
 END IF;
 
 WITH data AS (
@@ -266,7 +269,7 @@ WITH data AS (
 RETURN json_build_object(
   'code', 0,
   'items', items
-) ;
+);
 
 END$$;
 
