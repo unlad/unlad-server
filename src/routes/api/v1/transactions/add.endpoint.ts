@@ -10,7 +10,7 @@ import { z } from "zod"
 export default new Route({
     endpoints: [
         new HTTPEndpoint({
-            method: "GET",
+            method: "POST",
             handlers: [
                 AuthenticationMiddleware("HTTP"),
                 RankMiddleware("HTTP", Rank.ADMIN),
@@ -21,7 +21,7 @@ export default new Route({
                         comment: z.string().optional()
                     })
 
-                    const { success, data } = schema.safeParse(req.session)
+                    const { success, data } = schema.safeParse(req.body)
                     if (!success) return res.send({ code: 1 })
 
                     const query = await server.transactions.add(data.uuid, data.items, data.comment)
