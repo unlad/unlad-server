@@ -18,7 +18,15 @@ export default new Route({
                     const query = await server.users.list()
                     if (query.code) return res.send({ code: 2 })
 
-                    res.send({ code: 0, users: query.users })
+                    res.send({ code: 0, users: query.users.map(user => {
+                        return {
+                            uuid: user.uuid,
+                            id: user.id,
+                            name: user.name,
+                            email: user.email,
+                            created: new Date(user.created).valueOf()
+                        }
+                    })})
                 },  
             ]
         })

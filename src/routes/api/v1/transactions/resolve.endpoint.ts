@@ -30,7 +30,7 @@ export default new Route({
                         tid: query.tid,
                         items: query.items,
                         comment: query.comment,
-                        timestamp: query.timestamp
+                        timestamp: new Date(query.timestamp).valueOf()
                     })
                 },
             ]

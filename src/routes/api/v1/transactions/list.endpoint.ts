@@ -19,7 +19,15 @@ export default new Route({
                     const query = await server.transactions.list(data.uuid)
                     if (query.code) return res.send({ code: 2 })
 
-                    res.send({ code: 0, transactions: query.transactions })
+                    res.send({ code: 0, transactions: query.transactions.map(transaction => {
+                        return {
+                            uuid: transaction.uuid,
+                            tid: transaction.tid,
+                            items: transaction.items,
+                            comment: transaction.comment,
+                            timestamp: new Date(transaction.timestamp).valueOf()
+                        }
+                    })})
                 },
             ]
         })
