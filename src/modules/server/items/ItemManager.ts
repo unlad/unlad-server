@@ -5,6 +5,7 @@ import { v4 } from "uuid";
 export interface Item {
     uuid: string
     name: string
+    type: string
     description: string
     price: number
 }
@@ -38,10 +39,10 @@ export class ItemManager {
         return { code: 0, item } as const
     }
 
-    async add(name: string, description: string, price: number) {
+    async add(name: string, type: string, description: string, price: number) {
         const uuid = v4()
 
-        const query = await this.database.items.create(uuid, name, description, price)
+        const query = await this.database.items.create(uuid, name, type, description, price)
         if (query.code) return { code: 1 } as const
 
         const reload = await this.loadItems()
@@ -52,6 +53,16 @@ export class ItemManager {
 
     async rename(uuid: string, name: string) {
         const query = await this.database.items.rename(uuid, name)
+        if (query.code) return { code: 1 } as const
+
+        const reload = await this.loadItems()
+        if (reload.code) return { code: 2 } as const
+
+        return { code: 0 } as const
+    }
+
+    async retype(uuid: string, type: string) {
+        const query = await this.database.items.retype(uuid, type)
         if (query.code) return { code: 1 } as const
 
         const reload = await this.loadItems()

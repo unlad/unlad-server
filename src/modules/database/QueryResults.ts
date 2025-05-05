@@ -86,12 +86,13 @@ export namespace QueryResults {
             items: {
                 uuid: string,
                 name: string,
+                type: string,
                 description: string,
                 price: number
             }[]
         } | { code: 1 }
 
-        export type Create = { code: 0 }
+        export type Create = { code: 0 | 1 }
         export type Delete = { code: 0 | 1 }
 
         export type Resolve = {
@@ -99,12 +100,14 @@ export namespace QueryResults {
             data: {
                 uuid: string,
                 name: string,
+                type: string,
                 description: string,
                 price: number
             }
         } | { code : 1 }
 
         export type Rename = { code: 0 | 1 }
+        export type Retype = { code: 0 | 1 }
         export type Redescribe = { code: 0 | 1 }
         export type Reprice = { code: 0 | 1 }
     }

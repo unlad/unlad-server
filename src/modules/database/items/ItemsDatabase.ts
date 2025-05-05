@@ -9,8 +9,8 @@ export class ItemsDatabase {
         return data;
     }
 
-    async create(uuid: string, name: string, description: string, price: number) {
-        const data = await this.database.call<QueryResults.Items.Create>("items.create", [uuid, name, description, price])
+    async create(uuid: string, name: string, type: string, description: string, price: number) {
+        const data = await this.database.call<QueryResults.Items.Create>("items.create", [uuid, name, type, description, price])
         return data;
     }
 
@@ -29,6 +29,11 @@ export class ItemsDatabase {
         return data;
     }
 
+    async retype(uuid: string, type: string) {
+        const data = await this.database.call<QueryResults.Items.Retype>("items.retype", [uuid, type])
+        return data;
+    }
+
     async redescribe(uuid: string, description: string) {
         const data = await this.database.call<QueryResults.Items.Redescribe>("items.redescribe", [uuid, description])
         return data;
@@ -38,6 +43,7 @@ export class ItemsDatabase {
         const data = await this.database.call<QueryResults.Items.Reprice>("items.reprice", [uuid, price])
         return data;
     }
+    
 
     constructor(database: Database) {
         this.database = database

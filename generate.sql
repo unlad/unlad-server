@@ -186,23 +186,33 @@ END$_$;
 ALTER FUNCTION public."bank.transfer"(sender uuid, receiver uuid, amount integer) OWNER TO postgres;
 
 --
--- Name: items.create(uuid, character varying, character varying, integer); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: items.create(uuid, text, text, text, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public."items.create"(uuid uuid, name character varying, description character varying, price integer) RETURNS json
+CREATE FUNCTION public."items.create"(uuid uuid, name text, type text, description text, price integer) RETURNS json
     LANGUAGE plpgsql
     AS $_$
 BEGIN
 
+IF (
+  SELECT true 
+  FROM items AS _items
+  WHERE _items.uuid = $1
+  LIMIT 1
+)
+THEN 
+  RETURN json_build_object('code', 1);
+END IF;
+
 INSERT INTO items
-VALUES ($1, $2, $3, $4);
+VALUES ($1, $2, $3, $4, $5);
 
 RETURN json_build_object('code', 0);
 
 END$_$;
 
 
-ALTER FUNCTION public."items.create"(uuid uuid, name character varying, description character varying, price integer) OWNER TO postgres;
+ALTER FUNCTION public."items.create"(uuid uuid, name text, type text, description text, price integer) OWNER TO postgres;
 
 --
 -- Name: items.delete(uuid); Type: FUNCTION; Schema: public; Owner: postgres
@@ -277,10 +287,10 @@ END$$;
 ALTER FUNCTION public."items.list"() OWNER TO postgres;
 
 --
--- Name: items.redescribe(uuid, character varying); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: items.redescribe(uuid, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public."items.redescribe"(uuid uuid, description character varying) RETURNS json
+CREATE FUNCTION public."items.redescribe"(uuid uuid, description text) RETURNS json
     LANGUAGE plpgsql
     AS $_$
 BEGIN
@@ -306,13 +316,13 @@ RETURN json_build_object('code', 0);
 END$_$;
 
 
-ALTER FUNCTION public."items.redescribe"(uuid uuid, description character varying) OWNER TO postgres;
+ALTER FUNCTION public."items.redescribe"(uuid uuid, description text) OWNER TO postgres;
 
 --
--- Name: items.rename(uuid, character varying); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: items.rename(uuid, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public."items.rename"(uuid uuid, name character varying) RETURNS json
+CREATE FUNCTION public."items.rename"(uuid uuid, name text) RETURNS json
     LANGUAGE plpgsql
     AS $_$
 BEGIN
@@ -338,7 +348,7 @@ RETURN json_build_object('code', 0);
 END$_$;
 
 
-ALTER FUNCTION public."items.rename"(uuid uuid, name character varying) OWNER TO postgres;
+ALTER FUNCTION public."items.rename"(uuid uuid, name text) OWNER TO postgres;
 
 --
 -- Name: items.reprice(uuid, integer); Type: FUNCTION; Schema: public; Owner: postgres
@@ -381,8 +391,9 @@ CREATE FUNCTION public."items.resolve"(uuid uuid) RETURNS json
     AS $_$
 DECLARE
 
-name varchar(64);
-description varchar(512);
+name text;
+type text;
+description text;
 price integer;
 
 BEGIN
@@ -400,13 +411,13 @@ THEN
 END IF;
 
 WITH data AS (
-  SELECT _items.name, _items.description, _items.price
+  SELECT _items.name, _items.type, _items.description, _items.price
   FROM items AS _items
   WHERE _items.uuid = $1
 )
 
-SELECT data.name, data.description, data.price
-INTO name, description, price
+SELECT data.name, data.type, data.description, data.price
+INTO name, type, description, price
 FROM data;
 
 RETURN json_build_object(
@@ -414,6 +425,7 @@ RETURN json_build_object(
   'data', json_build_object(
     'uuid', $1,
     'name', name,
+    'type', type,
     'description', description,
     'price', price
   )
@@ -423,6 +435,38 @@ END$_$;
 
 
 ALTER FUNCTION public."items.resolve"(uuid uuid) OWNER TO postgres;
+
+--
+-- Name: items.retype(uuid, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public."items.retype"(uuid uuid, type text) RETURNS json
+    LANGUAGE plpgsql
+    AS $_$
+BEGIN
+
+IF (
+  SELECT NOT EXISTS (
+    SELECT true 
+    FROM items AS _items 
+    WHERE _items.uuid = $1 
+    LIMIT 1
+  )
+)
+THEN
+  RETURN json_build_object('code', 1); 
+END IF;
+
+UPDATE items as _items
+SET type = $2
+WHERE _items.uuid = $1;
+
+RETURN json_build_object('code', 0);
+
+END$_$;
+
+
+ALTER FUNCTION public."items.retype"(uuid uuid, type text) OWNER TO postgres;
 
 --
 -- Name: transactions.add(uuid, uuid, character varying, character varying); Type: FUNCTION; Schema: public; Owner: postgres
@@ -873,8 +917,9 @@ ALTER TABLE public.bank OWNER TO postgres;
 
 CREATE TABLE public.items (
     uuid uuid NOT NULL,
-    name character varying(64) NOT NULL,
-    description character varying(512) NOT NULL,
+    name text NOT NULL,
+    type text NOT NULL,
+    description text NOT NULL,
     price integer NOT NULL
 );
 
