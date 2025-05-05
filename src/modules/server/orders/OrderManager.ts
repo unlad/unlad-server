@@ -22,6 +22,7 @@ export class Order extends EventEmitter {
     manager: ItemManager
     uuid: string
     oid: string
+    created: number = Date.now()
 
     status: OrderStatus = OrderStatus.PENDING;
     items: Map<string, OrderItem> = new Map<string, OrderItem>()
@@ -49,6 +50,7 @@ export class Order extends EventEmitter {
         Why? Deduction query and Transaction query are separate.
         If deduction succeeds but transaction fails, the transaction
         log will not show even if the payment went through.
+        Consider creating this as a SQL transaction
         */
 
         // DANGEROUS //
