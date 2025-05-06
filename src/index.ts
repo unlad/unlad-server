@@ -39,6 +39,7 @@ async function main(): Promise<void> {
     await routing.register(server)
     
     server.start({ ssl: config.environment == "PROD" && secrets.ssl, port: config.web.port })
+    process.on("exit", () => server.stop())
 }
 
 main();
