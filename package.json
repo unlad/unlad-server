@@ -1,7 +1,7 @@
 {
-  "name": "freeren-server",
+  "name": "unlad-server",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "scripts": {
     "dev": "node --import=tsx --watch ./src/index.ts",
@@ -9,7 +9,7 @@
     "start": "node --import=tsx ./src/index.ts",
     "start:docker": "docker compose up",
     "lint": "eslint . --ext .ts --fix --config .eslintrc.json",
-    "build": "docker compose build --no-cache"
+    "build": "docker compose build"
   },
   "devDependencies": {
     "@types/connect-pg-simple": "^7.0.3",
