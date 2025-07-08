@@ -9,9 +9,13 @@
     "start": "node --import=tsx ./src/index.ts",
     "start:docker": "docker compose up",
     "lint": "eslint . --ext .ts --fix --config .eslintrc.json",
-    "build": "docker compose build"
+    "build": "docker compose build",
+    "prepare": "husky",
+    "commitlint": "commitlint --edit"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@types/connect-pg-simple": "^7.0.3",
     "@types/cookie-signature": "^1.1.2",
     "@types/cors": "^2.8.17",
@@ -24,6 +28,7 @@
     "@types/pg": "^8.11.13",
     "@types/uuid": "^10.0.0",
     "eslint": "^9.22.0",
+    "husky": "^9.1.7",
     "tsx": "^4.19.3",
     "typescript": "~5.7.2",
     "vite": "^6.2.0"
