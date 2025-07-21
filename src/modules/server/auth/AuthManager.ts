@@ -52,7 +52,7 @@ export class AuthManager {
 
         server.app.use(session({
             store: new (store(session))({
-                pool: this.database._pool,
+                pool: this.database.pool,
                 tableName: 'session'
             }),
 

@@ -3,7 +3,7 @@ import { fileURLToPath } from "url";
 
 import { Secrets } from "modules/secrets/Secrets";
 import { Server } from "modules/server/Server";
-import { Database } from "modules/database/Database";
+import { Database } from "modules/database_old/Database";
 import { Routing } from "modules/routing/Routing";
 import { Config } from "modules/config/Config";
 
