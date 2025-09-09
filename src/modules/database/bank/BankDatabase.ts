@@ -1,30 +1,53 @@
 import { Database } from "modules/database/Database"
-import { QueryResults } from "modules/database/QueryResults"
+import { Bank } from "modules/database/entities/Bank"
+
+import { DataSource, Repository } from "typeorm"
 
 export class BankDatabase {
     database: Database
+    source: DataSource
+    repository: Repository<Bank>
 
     async resolve(uuid: string) {
-        const data = await this.database.call<QueryResults.Bank.Resolve>("bank.resolve", [uuid])
-        return data;
+        return this.repository.findOneByOrFail({ uuid })
+            .then(data => { return { code: 0, data } })
+            .catch(() => { return { code: 1 } })
     }
 
     async credit(uuid: string, amount: number) {
-        const data = await this.database.call<QueryResults.Bank.Credit>("bank.credit", [uuid, amount])
-        return data;
+        return this.repository.update({ uuid }, { balance: () => `balance + ${amount}`})
+            .then(results => { return { code: results.affected ? 1 : 0 } })
+            .catch(() => { return { code: 1 } })
     }
 
     async deduct(uuid: string, amount: number) {
-        const data = await this.database.call<QueryResults.Bank.Deduct>("bank.deduct", [uuid, amount])
-        return data;
+        return this.repository.update({ uuid }, { balance: () => `balance - ${amount}`})
+            .then(results => { return { code: results.affected ? 1 : 0 } })
+            .catch(() => { return { code: 1 } })
     }
 
     async transfer(sender: string, receiver: string, amount: number) {
-        const data = await this.database.call<QueryResults.Bank.Transfer>("bank.transfer", [sender, receiver, amount])
-        return data;
+        const runner = this.source.createQueryRunner()
+        await runner.connect()
+        await runner.startTransaction()
+
+        try {
+            const sendresult = await this.repository.update({ uuid: sender }, { balance: () => `balance - ${amount}`})
+            const receiveresult = await this.repository.update({ uuid: receiver }, { balance: () => `balance + ${amount}`})
+
+            await runner.commitTransaction()
+            return { code: sendresult.affected && receiveresult.affected ? 1 : 0 }
+        } catch (e) {
+            await runner.rollbackTransaction()
+            throw e
+        } finally {
+            await runner.release()
+        }
     }
 
     constructor(database: Database) {
         this.database = database
+        this.source = database.source
+        this.repository = this.source.getRepository(Bank)
     }
 }

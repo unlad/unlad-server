@@ -53,12 +53,13 @@ export class AuthManager {
         server.app.use(session({
             store: new (store(session))({
                 pool: this.database._pool,
-                tableName: 'session'
+                tableName: 'session',
+                createTableIfMissing: true
             }),
-
+            
             secret: options.secret,
             resave: false,
-            cookie: { maxAge: options.max_age * 24 * 60 * 60 * 1000 }
+            cookie: { maxAge: options.max_age * 24 * 60 * 60 * 1000 },
         }))
     }
 }

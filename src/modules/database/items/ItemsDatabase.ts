@@ -1,51 +1,65 @@
 import { Database } from "modules/database/Database"
-import { QueryResults } from "modules/database/QueryResults"
+import { Items } from "modules/database/entities/Items"
+
+import { DataSource, Repository } from "typeorm"
 
 export class ItemsDatabase {
     database: Database
+    source: DataSource
+    repository: Repository<Items>
 
     async list() {
-        const data = await this.database.call<QueryResults.Items.List>("items.list", [])
-        return data;
+        return this.repository.find()
+            .then((items) => { return { code: 0, items } })
+            .catch(() => { return { code: 1 } })
     }
 
-    async create(uuid: string, name: string, type: string, description: string, price: number) {
-        const data = await this.database.call<QueryResults.Items.Create>("items.create", [uuid, name, type, description, price])
-        return data;
+    async create(name: string, type: string, description: string, price: number) {
+        return this.repository.insert({ name, type, description, price })
+            .then(() => { return { code: 0 } })
+            .catch(() => { return { code: 1 } })
     }
 
     async delete(uuid: string) {
-        const data = await this.database.call<QueryResults.Items.Delete>("items.delete", [uuid])
-        return data;
+        return this.repository.delete({ uuid })
+            .then(() => { return { code: 0 } })
+            .catch(() => { return { code: 1 } })
     }
 
     async resolve(uuid: string) {
-        const data = await this.database.call<QueryResults.Items.Resolve>("items.resolve", [uuid])
-        return data;
+        return this.repository.findOneByOrFail({ uuid })
+            .then((data) => { return { code: 0, data } })
+            .catch(() => { return { code: 1 } })
     }
 
     async rename(uuid: string, name: string) {
-        const data = await this.database.call<QueryResults.Items.Rename>("items.rename", [uuid, name])
-        return data;
+        return this.repository.update({ uuid }, { name })
+            .then(results => { return { code: results.affected ? 1 : 0 } })
+            .catch(() => { return { code: 1 } })
     }
 
     async retype(uuid: string, type: string) {
-        const data = await this.database.call<QueryResults.Items.Retype>("items.retype", [uuid, type])
-        return data;
+        return this.repository.update({ uuid }, { type })
+            .then(results => { return { code: results.affected ? 1 : 0 } })
+            .catch(() => { return { code: 1 } })
     }
 
     async redescribe(uuid: string, description: string) {
-        const data = await this.database.call<QueryResults.Items.Redescribe>("items.redescribe", [uuid, description])
-        return data;
+        return this.repository.update({ uuid }, { description })
+            .then(results => { return { code: results.affected ? 1 : 0 } })
+            .catch(() => { return { code: 1 } })
     }
 
     async reprice(uuid: string, price: number) {
-        const data = await this.database.call<QueryResults.Items.Reprice>("items.reprice", [uuid, price])
-        return data;
+        return this.repository.update({ uuid }, { price })
+            .then(results => { return { code: results.affected ? 1 : 0 } })
+            .catch(() => { return { code: 1 } })
     }
     
 
     constructor(database: Database) {
         this.database = database
+        this.source = database.source
+        this.repository = this.source.getRepository(Items)
     }
 }

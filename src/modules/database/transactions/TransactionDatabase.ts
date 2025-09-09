@@ -1,28 +1,34 @@
 import { Database } from "modules/database/Database"
-import { QueryResults } from "modules/database/QueryResults"
-import { v4 } from "uuid";
+import { Transactions } from "modules/database/entities/Transactions"
+
+import { DataSource, Repository } from "typeorm"
 
 export class TransactionDatabase {
     database: Database
+    source: DataSource
+    repository: Repository<Transactions>
 
     async list(uuid: string) {
-        const data = await this.database.call<QueryResults.Transactions.List>("transactions.list", [uuid])
-        return data;
+        return this.repository.findBy({ uuid })
+            .then((transactions) => { return { code: 0, data: transactions } })
+            .catch(() => { return { code: 1 } })
     }
 
     async resolve(tid: string) {
-        const data = await this.database.call<QueryResults.Transactions.Resolve>("transactions.resolve", [tid])
-        return data;
+        return this.repository.findOneByOrFail({ tid })
+            .then((data) => { return { code: 0, data } })
+            .catch(() => { return { code: 1 } })
     }
 
-    async add(uuid: string, items: string, comment?: string) {
-        const tid = v4()
-
-        const data = await this.database.call<QueryResults.Transactions.Add>("transactions.add", [uuid, tid, items, comment])
-        return data;
+    async add(uuid: string, items: { uuid: string, name: string, price: number, amount: number }[], comment?: string) {
+        return this.repository.insert({ uuid, items, comment })
+            .then(() => { return { code: 0 } })
+            .catch(() => { return { code: 1 } })
     }
 
     constructor(database: Database) {
         this.database = database
+        this.source = database.source
+        this.repository = this.source.getRepository(Transactions)
     }
 }

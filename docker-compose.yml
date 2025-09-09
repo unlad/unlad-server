@@ -3,7 +3,6 @@ services:
     env_file: .env
     build: 
       context: .
-      dockerfile: ./docker/dockerfiles/database
     image: postgres
     environment:
       PGUSER: $DB_USER

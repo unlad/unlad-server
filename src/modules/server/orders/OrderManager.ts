@@ -32,7 +32,7 @@ export class Order extends EventEmitter {
 
         return {
             code: 0,
-            items: Array.from(this.items.values()).map(item => `${item.uuid},${item.name},${item.amount},${item.price}`).join(";")
+            items: Array.from(this.items.values()).map(({ uuid, name, price, amount }) => { return { uuid, name, price, amount }})
         } as const
     }
 
