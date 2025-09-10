@@ -1,5 +1,6 @@
 import { Database } from "modules/database/Database"
 import { Bank } from "modules/database/entities/Bank"
+import { QueryResults } from "modules/database/QueryResults"
 
 import { DataSource, Repository } from "typeorm"
 
@@ -9,21 +10,27 @@ export class BankDatabase {
     repository: Repository<Bank>
 
     async resolve(uuid: string) {
-        return this.repository.findOneByOrFail({ uuid })
+        return (
+            this.repository.findOneByOrFail({ uuid })
             .then(data => { return { code: 0, data } })
             .catch(() => { return { code: 1 } })
+        ) as Promise<QueryResults.Bank.Resolve>
     }
 
     async credit(uuid: string, amount: number) {
-        return this.repository.update({ uuid }, { balance: () => `balance + ${amount}`})
+        return (
+            this.repository.update({ uuid }, { balance: () => `balance + ${amount}`})
             .then(results => { return { code: results.affected ? 1 : 0 } })
             .catch(() => { return { code: 1 } })
+        ) as Promise<QueryResults.Bank.Credit>
     }
 
     async deduct(uuid: string, amount: number) {
-        return this.repository.update({ uuid }, { balance: () => `balance - ${amount}`})
+        return (
+            this.repository.update({ uuid }, { balance: () => `balance - ${amount}`})
             .then(results => { return { code: results.affected ? 1 : 0 } })
             .catch(() => { return { code: 1 } })
+        ) as Promise<QueryResults.Bank.Deduct>
     }
 
     async transfer(sender: string, receiver: string, amount: number) {
@@ -36,10 +43,10 @@ export class BankDatabase {
             const receiveresult = await this.repository.update({ uuid: receiver }, { balance: () => `balance + ${amount}`})
 
             await runner.commitTransaction()
-            return { code: sendresult.affected && receiveresult.affected ? 1 : 0 }
+            return { code: sendresult.affected && receiveresult.affected ? 1 : 0 } as QueryResults.Bank.Transfer
         } catch (e) {
             await runner.rollbackTransaction()
-            throw e
+            return { code: 1 } as QueryResults.Bank.Transfer
         } finally {
             await runner.release()
         }
