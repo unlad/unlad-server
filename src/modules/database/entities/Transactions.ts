@@ -5,7 +5,7 @@ export class Transactions {
     @PrimaryGeneratedColumn("uuid")
     tid: string
 
-    @Column("uuid", { unique: true, generated: "uuid" })
+    @Column("uuid", { generated: "uuid" })
     uuid: string
 
     @Column("json", { array: false })
