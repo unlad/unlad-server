@@ -3,8 +3,8 @@ import { Database } from "modules/database/Database";
 export class TransactionManager {
     database: Database
 
-    async add(uuid: string, items: string, comment?: string) {
-        const query = await this.database.transactions.add(uuid, items, comment)
+    async add(items: { uuid: string, name: string, price: number, amount: number }[], comment?: string) {
+        const query = await this.database.transactions.add(items, comment)
         if (query.code) return { code: 1 } as const
 
         return { code: 0 }
