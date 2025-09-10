@@ -23,10 +23,10 @@ export class TransactionDatabase {
         ) as Promise<QueryResults.Transactions.Resolve>
     }
 
-    async add(items: { uuid: string, name: string, price: number, amount: number }[], comment?: string) {
-        return (this.repository.insert({ items, comment })
+    async add(uuid: string, items: { uuid: string, name: string, price: number, amount: number }[], comment?: string) {
+        return (this.repository.insert({ uuid, items, comment })
             .then(() => { return { code: 0 } })
-            .catch(() => { return { code: 1 } })
+            .catch((e) => { return { code: 1 } })
         ) as Promise<QueryResults.Transactions.Add>
     }
 

@@ -28,7 +28,7 @@ export default new Route({
                     const query = await server.items.add(data.name, data.type, data.description, data.price)
                     if (query.code) return res.send({ code: 2 })
 
-                    res.send({ code: 0, uuid: query.uuid })
+                    res.send({ code: 0 })
                 },
             ]
         })

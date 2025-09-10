@@ -103,6 +103,7 @@ export class Order extends EventEmitter {
         if (this.status !== OrderStatus.PENDING) return { code: 1 } as const
 
         const query = await this.pay();
+        console.log(query.code)
         if (query.code) return { code: 2 } as const
 
         this.status = OrderStatus.CONFIRMED

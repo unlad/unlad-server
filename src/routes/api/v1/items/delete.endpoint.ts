@@ -19,8 +19,11 @@ export default new Route({
                     const { success, data } = await schema.safeParse(req.body)
                     if (!success) return res.send({ code: 1 })
                     
-                    const query = await server.items.delete(data.uuid)
-                    if (query.code) return res.send({ code: 2 })
+                    const itemsquery = await server.items.delete(data.uuid)
+                    if (itemsquery.code) return res.send({ code: 2 })
+
+                    const menuquery = await server.menu.remove(data.uuid)
+                    if (menuquery.code) return res.send({ code: 2 })
 
                     res.send({ code: 0 })
                 },

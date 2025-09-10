@@ -28,15 +28,26 @@ export default new Route({
 
                     const order = query.order
 
+                    let result
                     switch(data.status) {
-                        case -1: order.cancel(); break
-                        case 1: order.confirm(); break
-                        case 2: order.complete(); break
-                        case 3: order.receive(); break
+                        case -1: 
+                            result = order.cancel()
+                            break
+
+                        case 1: 
+                            result = await order.confirm()
+                            break
+                        case 2:
+                            result = order.complete()
+                            break
+                        case 3:
+                            result = order.receive()
+                            break
 
                         default: return res.send({ code: 3 })
                     }
 
+                    if (result.code) return res.send({ code: 4 })
                     res.send({ code: 0 })
                 }
             ]

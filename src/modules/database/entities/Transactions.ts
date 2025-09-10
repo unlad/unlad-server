@@ -8,7 +8,7 @@ export class Transactions {
     @Column("uuid", { unique: true, generated: "uuid" })
     uuid: string
 
-    @Column("json", { array: true })
+    @Column("json", { array: false })
     items: {
         uuid: string
         name: string

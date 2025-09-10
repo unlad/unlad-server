@@ -17,7 +17,7 @@ export default new Route({
                 async (server: Server, req: Request, res: Response, next: NextFunction) => {
                     const schema = z.object({
                         uuid: z.string().uuid(),
-                        price: z.number()
+                        price: z.number().min(0)
                     })
 
                     const { success, data } = await schema.safeParse(req.body)

@@ -26,7 +26,7 @@ export default new Route({
                     if (query.order.uuid !== session.data.uuid && session.data.rank < Rank.ADMIN) return res.send({ code: 4 })
                     
                     const items = Array.from(query.order.items.values()).map(item => { return { uuid: item.uuid, amount: item.amount } })
-                    res.send({ code: 0, uuid: query.order.uuid, items, created: query.order.created })
+                    res.send({ code: 0, status: query.order.status, uuid: query.order.uuid, items, created: query.order.created })
                 }
             ]
         })

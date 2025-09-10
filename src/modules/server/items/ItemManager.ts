@@ -40,15 +40,13 @@ export class ItemManager {
     }
 
     async add(name: string, type: string, description: string, price: number) {
-        const uuid = v4()
-
-        const query = await this.database.items.create(uuid, name, type, description, price)
+        const query = await this.database.items.create(name, type, description, price)
         if (query.code) return { code: 1 } as const
 
         const reload = await this.loadItems()
         if (reload.code) return { code: 2 } as const
 
-        return { code: 0, uuid } as const
+        return { code: 0 } as const
     }
 
     async rename(uuid: string, name: string) {
