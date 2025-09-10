@@ -36,6 +36,7 @@ export default new Route({
                         id: query.id,
                         name: query.name,
                         email: query.email,
+                        rank: query.rank,
                         created: new Date(query.created).valueOf()
                     })
                 },  
