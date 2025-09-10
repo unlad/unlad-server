@@ -103,6 +103,7 @@ export namespace QueryResults {
                 type: string,
                 description: string,
                 price: number
+                stock: number
             }
         } | { code : 1 }
 
@@ -110,5 +111,6 @@ export namespace QueryResults {
         export type Retype = { code: 0 | 1 }
         export type Redescribe = { code: 0 | 1 }
         export type Reprice = { code: 0 | 1 }
+        export type Restock = { code: 0 | 1 }
     }
 }

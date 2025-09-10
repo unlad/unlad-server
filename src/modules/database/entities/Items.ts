@@ -17,11 +17,15 @@ export class Items {
     @Column({ type: "int" })
     price: number
 
-    constructor(data: { uuid: string, name: string, type: string, description: string, price: number }) {
+    @Column({ type: "int", default: 0 })
+    stock: number
+
+    constructor(data: { uuid: string, name: string, type: string, description: string, price: number, stock: number }) {
         this.uuid = data.uuid
         this.name = data.name
         this.type = data.type
         this.description = data.description
         this.price = data.price
+        this.stock = data.stock
     }
 }

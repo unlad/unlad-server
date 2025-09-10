@@ -1,13 +1,12 @@
 import { Database } from "modules/database/Database";
 
-import { v4 } from "uuid";
-
 export interface Item {
     uuid: string
     name: string
     type: string
     description: string
-    price: number
+    price: number,
+    stock: number
 }
 
 export class ItemManager {
@@ -81,6 +80,16 @@ export class ItemManager {
 
     async reprice(uuid: string, price: number) {
         const query = await this.database.items.reprice(uuid, price)
+        if (query.code) return { code: 1 } as const
+
+        const reload = await this.loadItems()
+        if (reload.code) return { code: 2 } as const
+
+        return { code: 0 } as const
+    }
+
+    async restock(uuid: string, stock: number) {
+        const query = await this.database.items.restock(uuid, stock)
         if (query.code) return { code: 1 } as const
 
         const reload = await this.loadItems()

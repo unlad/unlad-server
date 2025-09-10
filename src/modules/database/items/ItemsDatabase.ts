@@ -64,7 +64,13 @@ export class ItemsDatabase {
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Items.Reprice>
     }
-    
+
+    async restock(uuid: string, inventory: number) {
+        return (this.repository.update({ uuid }, { stock: inventory })
+            .then(results => { return { code: results.affected ? 0 : 1 } })
+            .catch(() => { return { code: 1 } })
+        ) as Promise<QueryResults.Items.Restock>
+    }
 
     constructor(database: Database) {
         this.database = database

@@ -23,7 +23,8 @@ export default new Route({
                         uuid: query.item.uuid,
                         name: query.item.name,
                         description: query.item.description,
-                        price: query.item.price
+                        price: query.item.price,
+                        stock: query.item.stock
                     })
                 },
             ]
