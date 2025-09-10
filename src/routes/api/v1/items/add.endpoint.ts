@@ -19,7 +19,7 @@ export default new Route({
                         name: z.string(),
                         type: z.string(),
                         description: z.string(),
-                        price: z.number()
+                        price: z.number().min(0)
                     })
 
                     const { success, data } = await schema.safeParse(req.body)
