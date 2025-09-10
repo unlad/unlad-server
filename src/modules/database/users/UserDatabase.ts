@@ -1,5 +1,6 @@
 import { Database } from "modules/database/Database"
 import { Users } from "modules/database/entities/Users"
+import { Bank } from "modules/database/entities/Bank"
 import { QueryResults } from "modules/database/QueryResults"
 
 import { DataSource, Repository } from "typeorm"
@@ -24,10 +25,22 @@ export class UserDatabase {
     }
 
     async create(id: string, name: string, email: string, hash: string) {
-        return (this.repository.insert({ id, name, email, hash })
-            .then(() => { return { code: 0 } })
-            .catch(() => { return { code: 1 } })
-        ) as Promise<QueryResults.Users.Create>
+        const runner = this.source.createQueryRunner()
+        await runner.connect()
+        await runner.startTransaction()
+
+        try {
+            const userresult = await this.repository.insert({ id, name, email, hash })
+            const bankresult = await this.source.getRepository(Bank).insert({ uuid: userresult.identifiers[0].uuid })
+
+            await runner.commitTransaction()
+            return { code: userresult.identifiers.length && bankresult.identifiers.length ? 0 : 1 } as QueryResults.Bank.Transfer
+        } catch (e) {
+            await runner.rollbackTransaction()
+            return { code: 1 } as QueryResults.Bank.Transfer
+        } finally {
+            await runner.release()
+        }
     }
 
     async delete(uuid: string) {
