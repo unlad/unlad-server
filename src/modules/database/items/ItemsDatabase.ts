@@ -39,28 +39,28 @@ export class ItemsDatabase {
 
     async rename(uuid: string, name: string) {
         return (this.repository.update({ uuid }, { name })
-            .then(results => { return { code: results.affected ? 1 : 0 } })
+            .then(results => { return { code: results.affected ? 0 : 1 } })
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Items.Rename>
     }
 
     async retype(uuid: string, type: string) {
         return (this.repository.update({ uuid }, { type })
-            .then(results => { return { code: results.affected ? 1 : 0 } })
+            .then(results => { return { code: results.affected ? 0 : 1 } })
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Items.Retype>
     }
 
     async redescribe(uuid: string, description: string) {
         return (this.repository.update({ uuid }, { description })
-            .then(results => { return { code: results.affected ? 1 : 0 } })
+            .then(results => { return { code: results.affected ? 0 : 1 } })
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Items.Redescribe>
     }
 
     async reprice(uuid: string, price: number) {
         return (this.repository.update({ uuid }, { price })
-            .then(results => { return { code: results.affected ? 1 : 0 } })
+            .then(results => { return { code: results.affected ? 0 : 1 } })
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Items.Reprice>
     }

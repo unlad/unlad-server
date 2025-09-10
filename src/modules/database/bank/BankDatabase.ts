@@ -10,25 +10,22 @@ export class BankDatabase {
     repository: Repository<Bank>
 
     async resolve(uuid: string) {
-        return (
-            this.repository.findOneByOrFail({ uuid })
+        return (this.repository.findOneByOrFail({ uuid })
             .then(data => { return { code: 0, data } })
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Bank.Resolve>
     }
 
     async credit(uuid: string, amount: number) {
-        return (
-            this.repository.update({ uuid }, { balance: () => `balance + ${amount}`})
-            .then(results => { return { code: results.affected ? 1 : 0 } })
+        return (this.repository.update({ uuid }, { balance: () => `balance + ${amount}`})
+            .then(results => { return { code: results.affected ? 0 : 1 } })
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Bank.Credit>
     }
 
     async deduct(uuid: string, amount: number) {
-        return (
-            this.repository.update({ uuid }, { balance: () => `balance - ${amount}`})
-            .then(results => { return { code: results.affected ? 1 : 0 } })
+        return (this.repository.update({ uuid }, { balance: () => `balance - ${amount}`})
+            .then(results => { return { code: results.affected ? 0 : 1 } })
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Bank.Deduct>
     }
@@ -43,7 +40,7 @@ export class BankDatabase {
             const receiveresult = await this.repository.update({ uuid: receiver }, { balance: () => `balance + ${amount}`})
 
             await runner.commitTransaction()
-            return { code: sendresult.affected && receiveresult.affected ? 1 : 0 } as QueryResults.Bank.Transfer
+            return { code: sendresult.affected && receiveresult.affected ? 0 : 1 } as QueryResults.Bank.Transfer
         } catch (e) {
             await runner.rollbackTransaction()
             return { code: 1 } as QueryResults.Bank.Transfer
