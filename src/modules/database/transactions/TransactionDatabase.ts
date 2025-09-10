@@ -11,7 +11,7 @@ export class TransactionDatabase {
 
     async list(uuid: string) {
         return (this.repository.findBy({ uuid })
-            .then((transactions) => { return { code: 0, data: transactions } })
+            .then((transactions) => { return { code: 0, transactions } })
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Transactions.List>
     }
@@ -23,8 +23,8 @@ export class TransactionDatabase {
         ) as Promise<QueryResults.Transactions.Resolve>
     }
 
-    async add(uuid: string, items: { uuid: string, name: string, price: number, amount: number }[], comment?: string) {
-        return (this.repository.insert({ uuid, items, comment })
+    async add(items: { uuid: string, name: string, price: number, amount: number }[], comment?: string) {
+        return (this.repository.insert({ items, comment })
             .then(() => { return { code: 0 } })
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Transactions.Add>
