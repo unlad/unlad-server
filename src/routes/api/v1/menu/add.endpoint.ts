@@ -16,7 +16,7 @@ export default new Route({
                 RankMiddleware("HTTP", Rank.ADMIN),
                 async (server: Server, req: Request, res: Response, next: NextFunction) => {
                     const schema = z.object({ uuid: z.string().uuid() })
-                    const { success, data } = await schema.safeParse(req.body)
+                    const { success, data } = schema.safeParse(req.body)
                     if (!success) return res.send({ code: 1 })
                     
                     const query = server.menu.add(data.uuid)
