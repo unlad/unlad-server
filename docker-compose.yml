@@ -1,8 +1,6 @@
 services:
   db:
     env_file: .env
-    build: 
-      context: .
     image: postgres
     environment:
       PGUSER: $DB_USER
