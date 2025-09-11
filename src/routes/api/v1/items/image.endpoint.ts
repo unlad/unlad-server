@@ -32,7 +32,7 @@ export default new Route({
                     const query = server.items.resolve(params.data.uuid)
                     if (query.code) return res.send({ code: 2 })
 
-                    const dir = join(global.__dirname, "..", "static", "images", "items", params.data.uuid)
+                    const dir = join(global.__dirname, "..", "data", "images", "items", params.data.uuid)
                     if (!existsSync(dir)) return res.send({ code: 3 })
 
                     const image = join(dir, params.data.size?.toString() ?? "512")
@@ -120,7 +120,7 @@ export default new Route({
                             })
                         }
 
-                        const path = join(global.__dirname, "..", "static", "images", "items", body.data.uuid)
+                        const path = join(global.__dirname, "..", "data", "images", "items", body.data.uuid)
                         mkdirSync(path, { recursive: true })
 
                         for (const size of sizes) {
