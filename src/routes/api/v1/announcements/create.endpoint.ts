@@ -11,6 +11,7 @@ import { NextFunction, Request, Response } from "express"
 import { z } from "zod"
 import { v4 } from "uuid"
 import { UploadedFile } from "express-fileupload";
+import mimetics from "mimetics"
 
 export default new Route({
     endpoints: [
@@ -25,12 +26,18 @@ export default new Route({
                         author: z.string(),
                     })
                     
-                    const fileschema = z.object({ content: z.any().refine(file => file && file.mimetype == "text/markdown") })
+                    const fileschema = z.object({ content: z.any() })
                     const files = await fileschema.safeParse(req.files)
                     if (!files.success) return res.send({ code: 1 })
 
                     const body = bodyschema.safeParse(req.body)
                     if (!body.success) return res.send({ code: 2 })
+
+                    const content = req.files?.content as UploadedFile
+
+                    const accepted = ["text/markdown"]
+                    const result = mimetics.parse(content.data, content.name)
+                    if (!result || !accepted.includes(result.mime)) return res.send({ code: 4 })
 
                     const uuid = v4()
                     const path = join(global.__dirname, "..", "data", "announcements", uuid)
@@ -39,8 +46,6 @@ export default new Route({
                     const { title, author } = body.data
                     const date = Date.now()
                     const filedata = { uuid, title, author, created: date, modified: date }
-
-                    const content = req.files?.content as UploadedFile
                     
                     try {
                         writeFileSync(join(path, "meta"), JSON.stringify(filedata))

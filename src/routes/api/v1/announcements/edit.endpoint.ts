@@ -5,12 +5,12 @@ import { RankMiddleware } from "modules/routing/middlewares/rank.middleware";
 import { Rank } from "modules/server/users/UserManager";
 
 import { join } from "path";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, readFileSync, writeFileSync } from "fs";
 
 import { NextFunction, Request, Response } from "express"
 import { z } from "zod"
-import { v4 } from "uuid"
 import { UploadedFile } from "express-fileupload";
+import mimetics from "mimetics";
 
 export default new Route({
     endpoints: [
@@ -26,7 +26,7 @@ export default new Route({
                         author: z.string().optional(),
                     })
                     
-                    const fileschema = z.object({ content: z.any().refine(file => file && file.mimetype == "text/markdown").optional() }).optional()
+                    const fileschema = z.object({ content: z.any().optional() }).optional()
                     const files = await fileschema.safeParse(req.files)
                     if (!files.success) return res.send({ code: 1 })
 
@@ -48,6 +48,11 @@ export default new Route({
 
                         if (files.data?.content) {
                             const content = req.files?.content as UploadedFile
+
+                            const accepted = ["text/markdown"]
+                            const result = mimetics.parse(content.data, content.name)
+                            if (!result || !accepted.includes(result.mime)) return res.send({ code: 4 })
+                            
                             await content.mv(join(dir, "content"))
                         }
 
@@ -58,8 +63,6 @@ export default new Route({
                         return res.send({ code: 4 })
                     }
                     
-                    
-
                     return res.send({ code: 0 })
                 },  
             ]

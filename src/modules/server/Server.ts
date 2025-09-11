@@ -82,7 +82,6 @@ export class Server {
 
         app.use(fileUpload({
             limits: { fileSize: 2 * 1024 * 1024 },
-            safeFileNames: true,
             abortOnLimit: true,
             responseOnLimit: JSON.stringify({ code: 413 })
         }))
