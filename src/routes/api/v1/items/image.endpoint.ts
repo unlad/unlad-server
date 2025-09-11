@@ -13,6 +13,8 @@ import { z } from "zod";
 import { fileTypeFromFile } from "file-type"
 import sharp from "sharp"
 
+const sizes = [128, 192, 256, 384, 512]
+
 export default new Route({
     endpoints: [
         new HTTPEndpoint({
@@ -21,7 +23,7 @@ export default new Route({
                 async (server: Server, req: Request, res: Response, next: NextFunction) => {
                     const paramschema = z.object({
                         uuid: z.string().uuid(),
-                        size: z.number().refine(size => [128, 192, 256, 384, 512].includes(size)).optional()
+                        size: z.string().refine(size => sizes.includes(parseInt(size))).optional()
                     })
 
                     const params = await paramschema.safeParse(req.query)
@@ -54,11 +56,20 @@ export default new Route({
                 async (server: Server, req: Request, res: Response, next: NextFunction) => {
                     const bodyschema = z.object({ 
                         uuid: z.string().uuid(),
-                        crop: z.object({
-                            x: z.number().min(0),
-                            y: z.number().min(0),
-                            width: z.number().min(512),
-                            height: z.number().min(512),
+                        crop: z.string().refine(json => {
+                            try {
+                                z.object({
+                                    x: z.number().min(0),
+                                    y: z.number().min(0),
+                                    width: z.number().min(512),
+                                    height: z.number().min(512),
+                                }).parse(JSON.parse(json))
+
+                                return true
+                            } catch (e) {
+                                console.log(e)
+                                return false
+                            }
                         }).optional()
                     })
 
@@ -77,30 +88,46 @@ export default new Route({
                     const accepted = ["image/jpeg", "image/png"]
                     if (!accepted.includes(image.mimetype)) return res.send({ code: 4 })
                     
-                    // image.mv(join(path, params.data.uuid))
-
                     let formatter = sharp(image.data)
                     const metadata = await formatter.metadata()
 
                     if (metadata.width < 512 || metadata.height < 512) return res.send({ code: 5 })
+
                     
-                    if (!(metadata.width == 512 && metadata.height == 512)) {
-                        const max = Math.min(metadata.width, metadata.height)
+                    let cropdata
+                    if (body.data.crop) {
+                        cropdata = JSON.parse(body.data.crop)
 
-                        formatter = formatter.extract({
-                            left: body.data.crop?.x ?? 0,
-                            top: body.data.crop?.y ?? 0,
-                            width: body.data.crop?.width ?? max,
-                            height: body.data.crop?.height ?? max
-                        })
+                        if (
+                            cropdata.x > metadata.width ||
+                            cropdata.y > metadata.height ||
+                            cropdata.width > metadata.width ||
+                            cropdata.height > metadata.height ||
+                            metadata.width - cropdata.x < cropdata.width ||
+                            metadata.height - cropdata.y < cropdata.height
+                        ) return res.send({ code: 6 })
                     }
+                    
+                    try {
+                        if (!(metadata.width == 512 && metadata.height == 512)) {
+                            const max = Math.min(metadata.width, metadata.height)
 
-                    const path = join(global.__dirname, "..", "static", "images", "items", body.data.uuid)
-                    mkdirSync(path, { recursive: true })
+                            formatter = formatter.extract({
+                                left: cropdata?.x ?? 0,
+                                top: cropdata?.y ?? 0,
+                                width: cropdata?.width ?? max,
+                                height: cropdata?.height ?? max
+                            })
+                        }
 
-                    const sizes = [128, 192, 256, 384, 512]
-                    for (const size of sizes) {
-                        formatter.resize(size, size).toFile(join(path, size.toString()))
+                        const path = join(global.__dirname, "..", "static", "images", "items", body.data.uuid)
+                        mkdirSync(path, { recursive: true })
+
+                        for (const size of sizes) {
+                            formatter.resize(size, size).toFile(join(path, size.toString()))
+                        }
+                    } catch (e) {
+                        return res.send({ code: 7 })
                     }
 
                     res.send({ code: 0 })
