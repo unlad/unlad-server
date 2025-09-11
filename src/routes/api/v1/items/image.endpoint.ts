@@ -5,12 +5,12 @@ import { RankMiddleware } from "modules/routing/middlewares/rank.middleware";
 import { Rank } from "modules/server/users/UserManager";
 
 import { join } from "path";
-import { existsSync, mkdirSync } from "fs";
+import { existsSync, mkdirSync, readFileSync } from "fs";
 
 import { NextFunction, Request, Response } from "express"
 import { UploadedFile } from "express-fileupload"
 import { z } from "zod";
-import { fileTypeFromFile } from "file-type"
+import mimetics from "mimetics"
 import sharp from "sharp"
 
 const sizes = [128, 192, 256, 384, 512]
@@ -38,10 +38,10 @@ export default new Route({
                     const image = join(dir, params.data.size?.toString() ?? "512")
                     if (!existsSync(image)) return res.send({ code: 4 })
 
-                    const result = await fileTypeFromFile(image)
+                    const result = mimetics.parse(readFileSync(image))
                     if (!result) return res.send({ code: 5 })
                     if (!["image/png", "image/jpeg"].includes(result.mime)) return res.send({ code: 6 })
-                    
+
                     res.setHeader("Content-type", result.mime)
                     res.sendFile(image)
                 },
@@ -86,7 +86,8 @@ export default new Route({
                     const image = files.data.image as UploadedFile
 
                     const accepted = ["image/jpeg", "image/png"]
-                    if (!accepted.includes(image.mimetype)) return res.send({ code: 4 })
+                    const result = mimetics.parse(image.data)
+                    if (!result || !accepted.includes(result.mime)) return res.send({ code: 4 })
                     
                     let formatter = sharp(image.data)
                     const metadata = await formatter.metadata()
