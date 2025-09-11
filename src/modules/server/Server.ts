@@ -83,7 +83,6 @@ export class Server {
 
         app.use(fileUpload({
             limits: { fileSize: 2 * 1024 * 1024 },
-            useTempFiles: true,
             tempFileDir: join(global.__dirname, "..", "tmp"),
             safeFileNames: true,
             abortOnLimit: true,
