@@ -86,7 +86,8 @@ export class Server {
             useTempFiles: true,
             tempFileDir: join(global.__dirname, "..", "tmp"),
             safeFileNames: true,
-            abortOnLimit: true
+            abortOnLimit: true,
+            responseOnLimit: JSON.stringify({ code: 413 })
         }))
 
         // force extended express type hack
