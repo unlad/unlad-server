@@ -1,10 +1,10 @@
-import { Entity, Column, PrimaryColumn, OneToOne, JoinColumn } from "typeorm"
+import { Entity, Column, PrimaryColumn, JoinColumn, ManyToOne } from "typeorm"
 import { Users } from "./Users"
 
 @Entity()
 export class Notifications {
     @PrimaryColumn("uuid")
-    @OneToOne(() => Users, (user) => user.uuid,  {
+    @ManyToOne(() => Users, (user) => user.uuid,  {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
     })
