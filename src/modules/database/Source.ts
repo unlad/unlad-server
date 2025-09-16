@@ -1,8 +1,9 @@
 import { DataSourceOptions } from "typeorm"
-import { Users } from "./entities/Users"
-import { Bank } from "./entities/Bank"
-import { Items } from "./entities/Items"
-import { Transactions } from "./entities/Transactions"
+import { Users } from "modules/database/entities/Users"
+import { Bank } from "modules/database/entities/Bank"
+import { Items } from "modules/database/entities/Items"
+import { Transactions } from "modules/database/entities/Transactions"
+import { Notifications } from "modules/database/entities/Notifications"
 
 export default {
     type: "postgres",
@@ -13,7 +14,7 @@ export default {
     database: process.env.DB_NAME,
     synchronize: true,
     logging: true,
-    entities: [Users, Bank, Items, Transactions],
+    entities: [Users, Bank, Items, Transactions, Notifications],
     migrations: [],
     subscribers: [],
     entitySkipConstructor: true

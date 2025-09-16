@@ -3,6 +3,7 @@ import { randomBytes } from "crypto";
 import { join } from "path";
 
 import forge from "node-forge";
+import firebase from "firebase-admin"
 
 export type SecretsLoadOptions = {
     source: string,
@@ -24,6 +25,7 @@ export type SecretsGenerateOptions = {
 })
 
 export class Secrets {
+    firebase?: { account: firebase.ServiceAccount }
     ssl?: { key: Buffer, cert: Buffer }
     session?: { secret: Buffer }
 
@@ -37,6 +39,10 @@ export class Secrets {
 
         this.session = {
             secret: readFileSync(join(options.source, "session", "secret"))
+        }
+
+        this.firebase =  {
+            account: JSON.parse(readFileSync(join(options.source, "firebase", "account.json")).toString())
         }
     }
 

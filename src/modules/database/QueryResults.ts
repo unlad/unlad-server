@@ -113,4 +113,27 @@ export namespace QueryResults {
         export type Reprice = { code: 0 | 1 }
         export type Restock = { code: 0 | 1 }
     }
+
+    export namespace Notifications {
+        export type List = {
+            code: 0,
+            tokens: {
+                uuid: string,
+                type: string,
+                token: string
+            }[]
+        } | { code: 1 }
+
+        export type Register = { code: 0 | 1 }
+        export type Unregister = { code: 0 | 1 }
+
+        export type Resolve = {
+            code: 0,
+            tokens: {
+                uuid: string,
+                type: string,
+                token: string
+            }[]
+        } | { code : 1 }
+    }
 }
