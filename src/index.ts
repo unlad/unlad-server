@@ -30,6 +30,9 @@ async function main(): Promise<void> {
     await database.connect(config.database)
 
     const server = new Server(database, {
+        firebase: {
+            account: secrets.firebase!.account
+        },
         auth: {
             secret: secrets.session!.secret.toString(),
             max_age: config.auth.max_age

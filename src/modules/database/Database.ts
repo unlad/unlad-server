@@ -2,6 +2,7 @@ import { UserDatabase } from "modules/database/users/UserDatabase"
 import { BankDatabase } from "modules/database/bank/BankDatabase"
 import { TransactionDatabase } from "modules/database/transactions/TransactionDatabase";
 import { ItemsDatabase } from "modules/database/items/ItemsDatabase";
+import { NotificationsDatabase } from "modules/database/notifications/NotificationsDatabase"
 import sourcedata from "modules/database/Source"
 
 import { DataSource } from "typeorm";
@@ -25,6 +26,7 @@ export class Database {
     bank = new BankDatabase(this)
     transactions = new TransactionDatabase(this)
     items = new ItemsDatabase(this)
+    notifications = new NotificationsDatabase(this)
 
     // async call<ReturnData extends Record<string, any>>(name: string, args: unknown[]) {
     //     const { rows, fields } = await this._pool!.query({
