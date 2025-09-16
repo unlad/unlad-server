@@ -11,10 +11,10 @@ export class Notifications {
     @JoinColumn({ name: "uuid" })
     uuid: string
 
-    @Column({ type: "string" })
+    @Column({ type: "text" })
     type: string
 
-    @Column({ type: "string" })
+    @Column({ type: "text" })
     token: string
 
     constructor(data: { uuid: string, type: string,token: string }) {
