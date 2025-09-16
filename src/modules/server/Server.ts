@@ -76,17 +76,15 @@ export class Server {
 
     constructor(database: Database, options: ServerInitOptions) {
         const app = express()
-        app.use(express.static('static'))
 
         app.use(express.json());
         app.use(cors());
 
         app.use(fileUpload({
-            limits: { fileSize: 5 * 1024 * 1024 },
-            useTempFiles: true,
-            tempFileDir: join(global.__dirname, "..", "tmp"),
+            limits: { fileSize: 2 * 1024 * 1024 },
             safeFileNames: true,
-            abortOnLimit: true
+            abortOnLimit: true,
+            responseOnLimit: JSON.stringify({ code: 413 })
         }))
 
         // force extended express type hack
