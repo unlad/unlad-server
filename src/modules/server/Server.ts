@@ -81,8 +81,7 @@ export class Server {
         app.use(cors());
 
         app.use(fileUpload({
-            limits: { fileSize: 2 * 1024 * 1024 },
-            safeFileNames: true,
+            limits: { fileSize: 10 * 1024 * 1024 },
             abortOnLimit: true,
             responseOnLimit: JSON.stringify({ code: 413 })
         }))
