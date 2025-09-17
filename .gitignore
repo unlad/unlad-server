@@ -30,4 +30,4 @@ dist-ssr
 /mock/temp/*
 /secrets
 /tools
-/static
+/data

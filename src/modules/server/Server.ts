@@ -2,6 +2,7 @@ import { AuthManager } from "modules/server/auth/AuthManager";
 import { BankManager } from "modules/server/bank/BankManager";
 import { ItemManager } from "modules/server/items/ItemManager";
 import { MenuManager } from "modules/server/menu/MenuManager";
+import { NotificationManager } from "modules/server/notifications/NotificationManager";
 import { OrderManager } from "modules/server/orders/OrderManager";
 import { TransactionManager } from "modules/server/transactions/TransactionManager";
 import { UserManager } from "modules/server/users/UserManager";
@@ -10,14 +11,18 @@ import { Database } from "modules/database/Database";
 import http from "http"
 import https from "https"
 import { AddressInfo } from "net"
-import { join } from "path";
 
 import express from "express"
 import extend, { Application } from "express-ws"
 import cors from "cors"
 import fileUpload from "express-fileupload";
+import firebase from "firebase-admin"
 
 export type ServerInitOptions = {
+    firebase: {
+        account: firebase.ServiceAccount
+    },
+
     auth: {
         secret: string
         max_age: number
@@ -44,6 +49,7 @@ export class Server {
     bank: BankManager
     items: ItemManager
     menu: MenuManager
+    notifications: NotificationManager
     orders: OrderManager
     transactions: TransactionManager
 
@@ -76,17 +82,14 @@ export class Server {
 
     constructor(database: Database, options: ServerInitOptions) {
         const app = express()
-        app.use(express.static('static'))
 
         app.use(express.json());
         app.use(cors());
 
         app.use(fileUpload({
-            limits: { fileSize: 5 * 1024 * 1024 },
-            useTempFiles: true,
-            tempFileDir: join(global.__dirname, "..", "tmp"),
-            safeFileNames: true,
-            abortOnLimit: true
+            limits: { fileSize: 10 * 1024 * 1024 },
+            abortOnLimit: true,
+            responseOnLimit: JSON.stringify({ code: 413 })
         }))
 
         // force extended express type hack
@@ -97,6 +100,7 @@ export class Server {
         this.bank = new BankManager(database)
         this.items = new ItemManager(database)
         this.menu = new MenuManager(this.items)
+        this.notifications = new NotificationManager(database, { firebase: { account: options.firebase.account } })
         this.orders = new OrderManager(database, this.items)
         this.transactions = new TransactionManager(database)
     }
