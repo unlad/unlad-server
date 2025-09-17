@@ -136,4 +136,32 @@ export namespace QueryResults {
             }[]
         } | { code : 1 }
     }
+
+    export namespace Property {
+        export type List = {
+            code: 0,
+            properties: {
+                uuid: string,
+                name: string,
+                description: string
+                status: number,
+                property: string,
+            }[]
+        } | { code: 1 }
+
+        export type Register = { code: 0 | 1 }
+        export type Unregister = { code: 0 | 1 }
+        export type Update = { code: 0 | 1 }
+
+        export type Resolve = {
+            code: 0,
+            properties: {
+                uuid: string,
+                name: string,
+                description: string
+                status: number,
+                property: string,
+            }[]
+        } | { code : 1 }
+    }
 }
