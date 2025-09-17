@@ -155,13 +155,13 @@ export namespace QueryResults {
 
         export type Resolve = {
             code: 0,
-            properties: {
+            data: {
                 uuid: string,
                 name: string,
                 description: string
                 status: number,
                 property: string,
-            }[]
+            }
         } | { code : 1 }
     }
 }

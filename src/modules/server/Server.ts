@@ -4,6 +4,7 @@ import { ItemManager } from "modules/server/items/ItemManager";
 import { MenuManager } from "modules/server/menu/MenuManager";
 import { NotificationManager } from "modules/server/notifications/NotificationManager";
 import { OrderManager } from "modules/server/orders/OrderManager";
+import { PropertyManager } from "modules/server/property/PropertyManager";
 import { TransactionManager } from "modules/server/transactions/TransactionManager";
 import { UserManager } from "modules/server/users/UserManager";
 import { Database } from "modules/database/Database";
@@ -51,6 +52,7 @@ export class Server {
     menu: MenuManager
     notifications: NotificationManager
     orders: OrderManager
+    properties: PropertyManager
     transactions: TransactionManager
 
     async start(options?: ServerStartOptions): Promise<{ ssl: boolean, port: number }> {
@@ -102,6 +104,7 @@ export class Server {
         this.menu = new MenuManager(this.items)
         this.notifications = new NotificationManager(database, { firebase: { account: options.firebase.account } })
         this.orders = new OrderManager(database, this.items)
+        this.properties = new PropertyManager(database)
         this.transactions = new TransactionManager(database)
     }
 }

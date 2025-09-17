@@ -38,8 +38,8 @@ export class PropertyDatabase {
     }
 
     async resolve(uuid: string, property: string) {
-        return (this.repository.findBy({ uuid, property })
-            .then((properties) => { return { code: 0, properties } })
+        return (this.repository.findOneByOrFail({ uuid, property })
+            .then((data) => { return { code: 0, data } })
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Property.Resolve>
     }
