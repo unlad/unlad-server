@@ -12,11 +12,11 @@ export default new Route({
             handlers: [
                 AuthenticationMiddleware("HTTP"),
                 async (server: Server, req: Request, res: Response, next: NextFunction) => {
-                    const paramschema = z.object({ property: z.string().uuid() })
-                    const params = paramschema.safeParse(req.params)
-                    if (!params.success) return res.send({ code: 1 })
+                    const queryschema = z.object({ property: z.string().uuid() })
+                    const { success, data } = queryschema.safeParse(req.query)
+                    if (!success) return res.send({ code: 1 })
 
-                    const query = await server.properties.resolve(params.data.property)
+                    const query = await server.properties.resolve(data.property)
                     if (query.code) return res.send({ code: 3 })
 
                     res.send({ code: 0, data: query.data })
