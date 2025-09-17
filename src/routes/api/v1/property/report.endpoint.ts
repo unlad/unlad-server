@@ -25,14 +25,29 @@ export default new Route({
 
                     const property = resolvequery.data
                     if (property.status != 0 && property.status != 3 && property.recovery) return res.send({ code: 4 })
+                            
+                    const tokenquery = server.notifications.resolve(property.uuid)
+                    if (tokenquery.code) return res.send({ code: 5 })
 
-                    const updatequery = await server.properties.update(property.uuid, property.property, property.status == 0 ? 1 : 2, {
+                    const recovery = {
                         uuid: session.data.uuid,
                         surrendered: body.data.surrendered,
                         message: body.data.message,
                         timestamp: Date.now()
+                    }
+
+                    const updatequery = await server.properties.update(property.uuid, property.property, property.status == 0 ? 1 : 2, recovery)
+                    if (updatequery.code) return res.send({ code: 6 })
+
+                    const notifyquery = await server.notifications.send({
+                        type: "broadcast",
+                        message: {
+                            data: { recovery: JSON.stringify(recovery) },
+                            // TODO: Notification data (see notifications parameter)
+                            tokens: tokenquery.tokens.map(tokendata => tokendata.token)
+                        },
                     })
-                    if (updatequery.code) return res.send({ code: 5})
+                    if (notifyquery.code) return res.send({ code: 7 })
 
                     res.send({ code: 0 })
                 },  
