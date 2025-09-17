@@ -4,6 +4,7 @@ import { Bank } from "modules/database/entities/Bank"
 import { Items } from "modules/database/entities/Items"
 import { Transactions } from "modules/database/entities/Transactions"
 import { Notifications } from "modules/database/entities/Notifications"
+import { Property } from "modules/database/entities/Property"
 
 export default {
     type: "postgres",
@@ -14,7 +15,7 @@ export default {
     database: process.env.DB_NAME,
     synchronize: true,
     logging: true,
-    entities: [Users, Bank, Items, Transactions, Notifications],
+    entities: [Users, Bank, Items, Transactions, Notifications, Property],
     migrations: [],
     subscribers: [],
     entitySkipConstructor: true

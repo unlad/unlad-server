@@ -15,13 +15,13 @@ export interface Token {
 
 export type NotificationSendOptions = {
     type: "single",
-    data: firebase.messaging.Message
+    message: firebase.messaging.Message
 } | {
     type: "multiple",
-    data: firebase.messaging.Message[]
+    message: firebase.messaging.Message[]
 } | {
     type: "broadcast",
-    data: firebase.messaging.MulticastMessage
+    message: firebase.messaging.MulticastMessage
 }
 
 export class NotificationManager {
@@ -96,12 +96,12 @@ export class NotificationManager {
         let query
 
         switch(options.type) {
-            case "single": query = this.messaging.send(options.data); break
-            case "multiple": query = this.messaging.sendEach(options.data); break
-            case "broadcast": query = this.messaging.sendEachForMulticast(options.data); break
+            case "single": query = this.messaging.send(options.message); break
+            case "multiple": query = this.messaging.sendEach(options.message); break
+            case "broadcast": query = this.messaging.sendEachForMulticast(options.message); break
         }
 
-        query
+        return query
             .then(() => { return { code: 0 } as const })
             .catch(() => { return { code: 1 } as const })
     }
