@@ -19,15 +19,24 @@ export class Property {
     
     @Column({ type: "integer", default: 0 })
     status: number
+
+    @Column({ type: "json", array: false, nullable: true })
+    recovery?: {
+        uuid: string
+        surrendered: boolean
+        message?: string
+        timestamp: number
+    }
     
     @Column({ type: "uuid", generated: true })
     property: string
 
-    constructor(data: { uuid: string, name: string, description: string, status: number, property: string }) {
+    constructor(data: { uuid: string, name: string, description: string, status: number, recovery: { uuid: string, surrendered: boolean, message?: string, timestamp: number }, property: string }) {
         this.uuid = data.uuid
         this.name = data.name
         this.description = data.description
         this.status = data.status
+        this.recovery = data.recovery
         this.property = data.property
     }
 }

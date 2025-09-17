@@ -145,6 +145,12 @@ export namespace QueryResults {
                 name: string,
                 description: string
                 status: number,
+                recovery: {
+                    uuid: string
+                    surrendered: boolean
+                    message?: string
+                    timestamp: number
+                } | null
                 property: string,
             }[]
         } | { code: 1 }
@@ -160,6 +166,12 @@ export namespace QueryResults {
                 name: string,
                 description: string
                 status: number,
+                recovery: {
+                    uuid: string
+                    surrendered: boolean
+                    message?: string
+                    timestamp: number
+                } | null
                 property: string,
             }
         } | { code : 1 }

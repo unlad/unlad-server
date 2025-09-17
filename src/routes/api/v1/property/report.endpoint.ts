@@ -16,7 +16,7 @@ export default new Route({
                     const session = sessionschema.safeParse(req.session)
                     if (!session.success) return res.send({ code: 1 })
 
-                    const bodyschema = z.object({ property: z.string().uuid(), lost: z.boolean() })
+                    const bodyschema = z.object({ property: z.string().uuid(), surrendered: z.boolean(), message: z.string().optional() })
                     const body = bodyschema.safeParse(req.body)
                     if (!body.success) return res.send({ code: 2 })
 
@@ -24,21 +24,17 @@ export default new Route({
                     if (resolvequery.code) return res.send({ code: 3 })
 
                     const property = resolvequery.data
+                    if (property.status != 0 && property.status != 3 && property.recovery) return res.send({ code: 4 })
 
-                    let status = 0
-                    if (body.data.lost) {
-                        if (property.status > 1) return res.send({ code: 4 })
-                        status = property.recovery ? 2 : 3
-                    } else {
-                        if (property.status < 2) return res.send({ code: 4 })
-                        status = 0
-                    }
+                    const updatequery = await server.properties.update(property.uuid, property.property, property.status == 0 ? 1 : 2, {
+                        uuid: session.data.uuid,
+                        surrendered: body.data.surrendered,
+                        message: body.data.message,
+                        timestamp: Date.now()
+                    })
+                    if (updatequery.code) return res.send({ code: 5})
 
-                    const updatequery = await server.properties.update(session.data.uuid, body.data.property, status)
-                    if (updatequery.code) return res.send({ code: 5 })
-                    
-                    if (body.data.lost) res.send({ code: 0, recovery: property.recovery ?? false })
-                    else res.send({ code: 0 })
+                    res.send({ code: 0 })
                 },  
             ]
         })

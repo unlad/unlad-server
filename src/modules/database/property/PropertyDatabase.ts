@@ -30,15 +30,15 @@ export class PropertyDatabase {
         ) as Promise<QueryResults.Property.Unregister>
     }
 
-    async update(uuid: string, property: string, status: number) {
-        return (this.repository.update({ uuid, property }, { status })
+    async update(uuid: string, property: string, status: number, recovery?: { uuid: string, surrendered: boolean, message?: string, timestamp: number }) {
+        return (this.repository.update({ uuid, property }, recovery ? { status, recovery } : { status })
             .then(results => { return { code: results.affected ? 0 : 1 } })
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Property.Update>
     }
 
-    async resolve(uuid: string, property: string) {
-        return (this.repository.findOneByOrFail({ uuid, property })
+    async resolve(property: string) {
+        return (this.repository.findOneByOrFail({ property })
             .then((data) => { return { code: 0, data } })
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Property.Resolve>
