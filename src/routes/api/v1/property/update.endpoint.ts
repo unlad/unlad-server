@@ -34,7 +34,7 @@ export default new Route({
                         status = 0
                     }
 
-                    const updatequery = await server.properties.update(session.data.uuid, body.data.property, status)
+                    const updatequery = await server.properties.update(session.data.uuid, body.data.property, status, body.data.lost ? undefined : false)
                     if (updatequery.code) return res.send({ code: 5 })
                     
                     if (body.data.lost) res.send({ code: 0, recovery: property.recovery ?? false })
