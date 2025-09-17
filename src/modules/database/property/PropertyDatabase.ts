@@ -30,8 +30,8 @@ export class PropertyDatabase {
         ) as Promise<QueryResults.Property.Unregister>
     }
 
-    async update(uuid: string, property: string, status: number, recovery?: { uuid: string, surrendered: boolean, message?: string, timestamp: number } | false) {
-        return (this.repository.update({ uuid, property }, recovery == null && recovery !== false ? { status, recovery } : { status })
+    async update(uuid: string, property: string, status: number, recovery?: { uuid: string, surrendered: boolean, message?: string, timestamp: number } | null) {
+        return (this.repository.update({ uuid, property }, { status, recovery })
             .then(results => { return { code: results.affected ? 0 : 1 } })
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Property.Update>

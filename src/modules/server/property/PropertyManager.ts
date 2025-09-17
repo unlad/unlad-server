@@ -22,7 +22,7 @@ export class PropertyManager {
         return { code: 0 } as const
     }
 
-    async update(uuid: string, property: string, status: number, recovery?: { uuid: string, surrendered: boolean, message?: string, timestamp: number } | false) {
+    async update(uuid: string, property: string, status: number, recovery?: { uuid: string, surrendered: boolean, message?: string, timestamp: number } | null) {
         const query = await this.database.properties.update(uuid, property, status, recovery)
         if (query.code) return { code: 1 } as const
 

@@ -21,15 +21,15 @@ export class Property {
     status: number
 
     @Column({ type: "json", array: false, nullable: true })
-    recovery?: {
+    recovery: {
         uuid: string
         surrendered: boolean
         message?: string
         timestamp: number
-    }
+    } | null
     
     @Column({ type: "uuid", generated: "uuid" })
-    property: string
+    property: string 
 
     constructor(data: { uuid: string, name: string, description: string, status: number, recovery: { uuid: string, surrendered: boolean, message?: string, timestamp: number }, property: string }) {
         this.uuid = data.uuid
