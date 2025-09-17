@@ -28,7 +28,7 @@ export class Property {
         timestamp: number
     }
     
-    @Column({ type: "uuid", generated: true })
+    @Column({ type: "uuid", generated: "uuid" })
     property: string
 
     constructor(data: { uuid: string, name: string, description: string, status: number, recovery: { uuid: string, surrendered: boolean, message?: string, timestamp: number }, property: string }) {
