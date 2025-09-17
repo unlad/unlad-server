@@ -68,7 +68,7 @@ export class Order extends EventEmitter {
         const query = this.manager.resolve(uuid)
         if (query.code) return { code: 1 } as const
 
-        const item = query.item as OrderItem
+        const item = { ...query.item } as OrderItem
         item.amount = amount
 
         this.items.set(item.uuid, item)
