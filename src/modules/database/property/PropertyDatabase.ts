@@ -9,15 +9,15 @@ export class PropertyDatabase {
     source: DataSource
     repository: Repository<Property>
 
-    async list() {
-        return (this.repository.find()
+    async list(uuid: string) {
+        return (this.repository.findBy({ uuid })
             .then((properties) => { return { code: 0, properties } })
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Property.List>
     }
 
-    async register(uuid: string, name: string, description: string, status: number, property: string ) {
-        return (this.repository.insert({ uuid, name, description, status, property })
+    async register(uuid: string, name: string, description: string) {
+        return (this.repository.insert({ uuid, name, description })
             .then(() => { return { code: 0 } })
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Property.Register>
@@ -37,8 +37,8 @@ export class PropertyDatabase {
         ) as Promise<QueryResults.Property.Update>
     }
 
-    async resolve(uuid: string) {
-        return (this.repository.findBy({ uuid })
+    async resolve(uuid: string, property: string) {
+        return (this.repository.findBy({ uuid, property })
             .then((properties) => { return { code: 0, properties } })
             .catch(() => { return { code: 1 } })
         ) as Promise<QueryResults.Property.Resolve>

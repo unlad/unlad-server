@@ -11,23 +11,23 @@ export class Property {
     @JoinColumn({ name: "uuid" })
     uuid: string
     
-    @Column({ type: "uuid" })
-    property: string
-
-    @Column({ type: "integer" })
-    status: number
-
     @Column({ type: "text" })
     name: string
-
+    
     @Column({ type: "text" })
     description: string
+    
+    @Column({ type: "integer", default: 0 })
+    status: number
+    
+    @Column({ type: "uuid", generated: true })
+    property: string
 
-    constructor(data: { uuid: string, property: string, status: number, name: string, description: string }) {
+    constructor(data: { uuid: string, name: string, description: string, status: number, property: string }) {
         this.uuid = data.uuid
-        this.property = data.property
-        this.status = data.status
         this.name = data.name
         this.description = data.description
+        this.status = data.status
+        this.property = data.property
     }
 }

@@ -9,6 +9,7 @@ import { DataSource } from "typeorm";
 import { createDatabase, } from 'typeorm-extension';
 import pg from "pg"
 import { PostgresDriver } from "typeorm/driver/postgres/PostgresDriver";
+import { PropertyDatabase } from "./property/PropertyDatabase";
 
 export type DatabaseStartOptions = {
     name: string
@@ -27,6 +28,7 @@ export class Database {
     transactions = new TransactionDatabase(this)
     items = new ItemsDatabase(this)
     notifications = new NotificationsDatabase(this)
+    properties = new PropertyDatabase(this)
 
     // async call<ReturnData extends Record<string, any>>(name: string, args: unknown[]) {
     //     const { rows, fields } = await this._pool!.query({
