@@ -16,16 +16,13 @@ export default new Route({
                     const sessionschema = z.object({ uuid: z.string().uuid(), rank: z.number() })
                     const session = sessionschema.safeParse(req.session)
                     if (!session.success) return res.send({ code: 1 })
-
-                    let uuid = session.data.uuid
-
-                    if (session.data.rank >= Rank.ADMIN) {
-                        const bodyschema = z.object({ uuid: z.optional(z.string().uuid()) })
-                        const body = bodyschema.safeParse(req.query)
-                        if (!body.success) return res.send({ code: 2 })
                         
-                        if (body.data.uuid) uuid = body.data.uuid
-                    }
+                    const bodyschema = z.object({ uuid: z.optional(z.string().uuid()) })
+                    const body = bodyschema.safeParse(req.query)
+                    if (!body.success) return res.send({ code: 2 })
+                            
+                    let uuid = session.data.uuid
+                    if (body.data.uuid) uuid = body.data.uuid
 
                     const query = await server.users.resolve(uuid)
                     if (query.code) return res.send({ code: 3 })
@@ -36,7 +33,6 @@ export default new Route({
                         id: query.id,
                         name: query.name,
                         email: query.email,
-                        rank: query.rank,
                         created: new Date(query.created).valueOf()
                     })
                 },  
