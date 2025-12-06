@@ -37,6 +37,7 @@ export default new Route({
 
                     const accepted = ["text/markdown"]
                     const result = mimetics.parse(content.data, content.name)
+                    console.log(result);
                     if (!result || !accepted.includes(result.mime)) return res.send({ code: 4 })
 
                     const uuid = v4()
